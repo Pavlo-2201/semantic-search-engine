@@ -1,0 +1,20 @@
+# данные, индексы и веса моделей в репозиторий не попадают
+data/corpus/*.jsonl
+data/corpus/raw/
+data/indexes/
+artifacts/
+models/
+
+# python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# редакторы и ОС
+.idea/
+*.iml
+.vscode/
+.DS_Store
