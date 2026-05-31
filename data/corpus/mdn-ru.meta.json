@@ -1,0 +1,20 @@
+{
+  "corpus_name": "mdn-ru",
+  "output": "data/corpus/mdn-ru.jsonl",
+  "downloaded_at": "2026-10-06T14:09:07Z",
+  "source": {
+    "repo": "mdn/translated-content",
+    "ref": "main",
+    "listing_path": "files/ru/_wikihistory.json",
+    "license": "CC-BY-SA-2.5",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.5/",
+    "attribution": "MDN Web Docs contributors"
+  },
+  "slugs_in_source": 2635,
+  "slugs_selected": 2616,
+  "documents": 2570,
+  "missing_pages": 3,
+  "dropped_too_short": 43,
+  "total_chars": 8016552,
+  "fingerprint_sha256": "0f5e613ef25d14835578eb8bb317a8dfbceb1f69eb59ea9c7adc5204031343fe"
+}

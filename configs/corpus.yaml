@@ -1,0 +1,40 @@
+# Описание источника корпуса. Всё, что влияет на состав корпуса, задаётся здесь,
+# чтобы загрузку можно было повторить и сверить отпечаток.
+name: mdn-ru
+description: >
+  Русскоязычная техническая документация MDN Web Docs (переводы MDN на русский язык).
+  Текст статей распространяется по лицензии CC-BY-SA 2.5.
+
+source:
+  kind: github-raw
+  repo: mdn/translated-content
+  ref: main            # можно указать конкретный commit sha, тогда загрузка строго воспроизводима
+  # файл со списком страниц русского перевода: ключи объекта — slug страницы
+  listing_path: files/ru/_wikihistory.json
+  # каталог, в котором лежат сами статьи: files/ru/<slug в нижнем регистре>/index.md
+  docs_prefix: files/ru
+  base_url: https://raw.githubusercontent.com
+  page_url_template: https://developer.mozilla.org/ru/docs/{slug}
+  license: CC-BY-SA-2.5
+  license_url: https://creativecommons.org/licenses/by-sa/2.5/
+  attribution: MDN Web Docs contributors
+
+# Отбор страниц. Префиксы сравниваются с slug'ом страницы.
+selection:
+  include_prefixes:
+    - Web
+    - Learn_web_development
+    - Glossary
+    - WebAssembly
+    - Games
+    - Mozilla
+    - MDN
+  exclude_prefixes:
+    - conflicting      # служебные страницы MDN после слияния переводов
+    - orphaned
+  min_chars: 200       # очень короткие страницы-заглушки искать бессмысленно
+
+download:
+  workers: 8
+  timeout_seconds: 30
+  retries: 3
