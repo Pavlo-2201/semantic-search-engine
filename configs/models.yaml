@@ -1,0 +1,59 @@
+# Конфигурации кодировщиков. Требования каждой модели (префиксы, пулинг,
+# нормализация) заданы явно: код их не угадывает, а для sentence-transformers
+# ещё и сверяет указанный пулинг с загруженной моделью.
+
+models:
+  lsa-300:
+    backend: lsa
+    dim: 300
+    normalize: true
+    notes: >
+      TF-IDF и усечённое SVD, обучается на корпусе. Не требует загрузки весов,
+      поэтому измеряется в любом окружении и служит нижней границей качества
+      векторного поиска.
+
+  e5-small:
+    backend: sentence-transformers
+    model_name: intfloat/multilingual-e5-small
+    # E5 обучена с префиксами; без них качество заметно падает
+    query_prefix: "query: "
+    document_prefix: "passage: "
+    pooling: mean
+    normalize: true
+    max_seq_length: 512
+    batch_size: 32
+    notes: Многоязычная модель E5, 384 измерения, лицензия MIT.
+
+  e5-base:
+    backend: sentence-transformers
+    model_name: intfloat/multilingual-e5-base
+    query_prefix: "query: "
+    document_prefix: "passage: "
+    pooling: mean
+    normalize: true
+    max_seq_length: 512
+    batch_size: 16
+    notes: Многоязычная модель E5, 768 измерений, лицензия MIT.
+
+  labse:
+    backend: sentence-transformers
+    model_name: sentence-transformers/LaBSE
+    query_prefix: ""
+    document_prefix: ""
+    # у LaBSE в sentence-transformers пулинг по CLS-токену
+    pooling: cls
+    normalize: true
+    max_seq_length: 256
+    batch_size: 16
+    notes: LaBSE, 768 измерений, лицензия Apache-2.0.
+
+  rubert-tiny2:
+    backend: sentence-transformers
+    model_name: cointegrated/rubert-tiny2
+    query_prefix: ""
+    document_prefix: ""
+    pooling: mean
+    normalize: true
+    max_seq_length: 512
+    batch_size: 64
+    notes: Маленькая русская модель, 312 измерений, лицензия MIT.

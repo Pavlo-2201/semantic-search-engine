@@ -1,0 +1,263 @@
+"""Кодирование текста в векторы.
+
+Поддерживаются два бэкенда:
+
+* `sentence-transformers` — предобученные многоязычные модели. Требования модели
+  (префиксы запроса и документа, способ пулинга, нормализация) задаются в
+  конфигурации и проверяются по загруженной модели, а не угадываются.
+* `lsa` — латентно-семантический анализ: TF-IDF и усечённое SVD, обучается на
+  самом корпусе. Бэкенд нужен там, где предобученную модель скачать нельзя, и
+  как честная нижняя граница для векторного поиска.
+
+Запросы и документы кодируются разными методами: у многих моделей (например,
+E5) для них предусмотрены разные префиксы, и смешивать их нельзя.
+"""
+
+from __future__ import annotations
+
+import pickle
+from dataclasses import dataclass, field, replace
+from pathlib import Path
+from typing import Protocol, Sequence
+
+import numpy as np
+
+# Документ кодируется как заголовок и начало текста: трансформеры всё равно
+# обрезают вход (у E5 это 512 токенов), а начало статьи MDN описывает её суть.
+DEFAULT_DOCUMENT_MAX_CHARS = 2000
+
+
+@dataclass(frozen=True)
+class EncoderConfig:
+    name: str
+    backend: str
+    model_name: str | None = None
+    query_prefix: str = ""
+    document_prefix: str = ""
+    pooling: str = "mean"          # mean | cls — проверяется по загруженной модели
+    normalize: bool = True
+    max_seq_length: int | None = None
+    batch_size: int = 16
+    dim: int | None = None         # число измерений для lsa
+    document_max_chars: int = DEFAULT_DOCUMENT_MAX_CHARS
+    notes: str = ""
+    extra: dict = field(default_factory=dict)
+
+    @classmethod
+    def from_dict(cls, name: str, data: dict) -> "EncoderConfig":
+        known = {f for f in cls.__dataclass_fields__ if f != "extra"}
+        kwargs = {k: v for k, v in data.items() if k in known}
+        kwargs["name"] = data.get("name", name)
+        kwargs["extra"] = {k: v for k, v in data.items() if k not in known}
+        return cls(**kwargs)
+
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "backend": self.backend,
+            "model_name": self.model_name,
+            "query_prefix": self.query_prefix,
+            "document_prefix": self.document_prefix,
+            "pooling": self.pooling,
+            "normalize": self.normalize,
+            "max_seq_length": self.max_seq_length,
+            "batch_size": self.batch_size,
+            "dim": self.dim,
+            "document_max_chars": self.document_max_chars,
+        }
+
+
+def build_document_text(title: str, text: str, max_chars: int = DEFAULT_DOCUMENT_MAX_CHARS) -> str:
+    body = " ".join(text.split())
+    if max_chars and len(body) > max_chars:
+        body = body[:max_chars].rsplit(" ", 1)[0]
+    return f"{title}. {body}" if title else body
+
+
+def l2_normalize(matrix: np.ndarray) -> np.ndarray:
+    norms = np.linalg.norm(matrix, axis=1, keepdims=True)
+    norms[norms == 0.0] = 1.0
+    return (matrix / norms).astype(np.float32)
+
+
+class TextEncoder(Protocol):
+    config: EncoderConfig
+
+    @property
+    def dim(self) -> int:
+        ...
+
+    def encode_queries(self, texts: Sequence[str]) -> np.ndarray:
+        ...
+
+    def encode_documents(self, texts: Sequence[str]) -> np.ndarray:
+        ...
+
+
+class SentenceTransformerEncoder:
+    """Обёртка над sentence-transformers.
+
+    Что делается по требованиям модели:
+
+    * префиксы берутся из конфигурации и приписываются к запросам и документам
+      раздельно (у E5 это «query: » и «passage: », пропуск префиксов заметно
+      портит качество);
+    * способ пулинга не задаётся руками, а читается из загруженной модели и
+      сверяется с конфигурацией — расхождение это ошибка конфигурации;
+    * нормализация включается флагом; для косинусной близости и для FAISS с
+      внутренним произведением она обязательна.
+    """
+
+    def __init__(self, config: EncoderConfig, model=None):
+        from sentence_transformers import SentenceTransformer
+
+        self.config = config
+        if model is None:
+            if not config.model_name:
+                raise ValueError("для бэкенда sentence-transformers нужен model_name")
+            model = SentenceTransformer(config.model_name)
+        self.model = model
+        if config.max_seq_length:
+            self.model.max_seq_length = config.max_seq_length
+        self._check_pooling()
+
+    def _check_pooling(self) -> None:
+        pooling_module = None
+        for module in self.model._modules.values():
+            if type(module).__name__ == "Pooling":
+                pooling_module = module
+        if pooling_module is None:
+            return
+        # в sentence-transformers 6 это строка pooling_mode, в более старых —
+        # набор флагов pooling_mode_*_tokens
+        actual = getattr(pooling_module, "pooling_mode", None)
+        if actual is None:
+            if getattr(pooling_module, "pooling_mode_mean_tokens", False):
+                actual = "mean"
+            elif getattr(pooling_module, "pooling_mode_cls_token", False):
+                actual = "cls"
+            else:
+                actual = "other"
+        if actual != self.config.pooling:
+            raise ValueError(
+                f"модель {self.config.model_name} использует pooling '{actual}', "
+                f"а в конфигурации указан '{self.config.pooling}'"
+            )
+
+    @property
+    def dim(self) -> int:
+        return int(self.model.get_sentence_embedding_dimension())
+
+    def _encode(self, texts: Sequence[str], prefix: str) -> np.ndarray:
+        prepared = [prefix + text for text in texts]
+        vectors = self.model.encode(
+            prepared,
+            batch_size=self.config.batch_size,
+            convert_to_numpy=True,
+            normalize_embeddings=self.config.normalize,
+            show_progress_bar=False,
+        )
+        return np.asarray(vectors, dtype=np.float32)
+
+    def encode_queries(self, texts: Sequence[str]) -> np.ndarray:
+        return self._encode(texts, self.config.query_prefix)
+
+    def encode_documents(self, texts: Sequence[str]) -> np.ndarray:
+        return self._encode(texts, self.config.document_prefix)
+
+
+class LsaEncoder:
+    """TF-IDF и усечённое SVD: векторная модель, обучаемая на корпусе.
+
+    Обучается только на текстах документов. Запросы в обучении не участвуют,
+    поэтому разметка запросов не протекает в модель.
+    """
+
+    def __init__(self, config: EncoderConfig):
+        self.config = config
+        self._vectorizer = None
+        self._svd = None
+
+    @property
+    def dim(self) -> int:
+        if self._svd is None:
+            raise RuntimeError("модель lsa не обучена")
+        return int(self._svd.n_components)
+
+    def fit(self, document_texts: Sequence[str]) -> "LsaEncoder":
+        from sklearn.decomposition import TruncatedSVD
+        from sklearn.feature_extraction.text import TfidfVectorizer
+
+        from .text import analyze
+
+        n_components = int(self.config.dim or 300)
+        # число измерений не может превышать число документов
+        n_components = min(n_components, max(len(document_texts) - 1, 1))
+        self._vectorizer = TfidfVectorizer(analyzer=analyze, min_df=1, sublinear_tf=True)
+        matrix = self._vectorizer.fit_transform(document_texts)
+        n_components = min(n_components, matrix.shape[1] - 1 if matrix.shape[1] > 1 else 1)
+        self._svd = TruncatedSVD(n_components=n_components, random_state=42)
+        self._svd.fit(matrix)
+        return self
+
+    def _encode(self, texts: Sequence[str]) -> np.ndarray:
+        if self._vectorizer is None or self._svd is None:
+            raise RuntimeError("модель lsa не обучена: вызовите fit или load")
+        vectors = self._svd.transform(self._vectorizer.transform(list(texts)))
+        vectors = np.asarray(vectors, dtype=np.float32)
+        return l2_normalize(vectors) if self.config.normalize else vectors
+
+    # у LSA нет разных пространств для запроса и документа, но интерфейс общий
+    def encode_queries(self, texts: Sequence[str]) -> np.ndarray:
+        return self._encode(texts)
+
+    def encode_documents(self, texts: Sequence[str]) -> np.ndarray:
+        return self._encode(texts)
+
+    def save(self, path: str | Path) -> None:
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("wb") as handle:
+            pickle.dump(
+                {"config": self.config, "vectorizer": self._vectorizer, "svd": self._svd},
+                handle,
+            )
+
+    @classmethod
+    def load(cls, path: str | Path) -> "LsaEncoder":
+        with Path(path).open("rb") as handle:
+            state = pickle.load(handle)
+        encoder = cls(state["config"])
+        encoder._vectorizer = state["vectorizer"]
+        encoder._svd = state["svd"]
+        return encoder
+
+
+def build_encoder(
+    config: EncoderConfig,
+    document_texts: Sequence[str] | None = None,
+) -> TextEncoder:
+    """Создать кодировщик по конфигурации.
+
+    `document_texts` нужны только обучаемым на корпусе бэкендам (lsa).
+    """
+    if config.backend == "sentence-transformers":
+        return SentenceTransformerEncoder(config)
+    if config.backend == "lsa":
+        encoder = LsaEncoder(config)
+        if document_texts is None:
+            raise ValueError("бэкенду lsa нужны тексты документов для обучения")
+        return encoder.fit(document_texts)
+    raise ValueError(f"неизвестный бэкенд: {config.backend}")
+
+
+def load_model_configs(path: str | Path) -> dict[str, EncoderConfig]:
+    import yaml
+
+    data = yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}
+    models = data.get("models", data)
+    return {name: EncoderConfig.from_dict(name, value) for name, value in models.items()}
+
+
+def with_batch_size(config: EncoderConfig, batch_size: int) -> EncoderConfig:
+    return replace(config, batch_size=batch_size)
