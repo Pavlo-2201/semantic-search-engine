@@ -9,33 +9,12 @@ from semsearch.corpus import Document  # noqa: E402
 from semsearch.lexical import Bm25Retriever, TfidfRetriever, build_lexical_retriever  # noqa: E402
 from semsearch.text import analyze, normalize  # noqa: E402
 
-RAW_DOCUMENTS = [
-    ("Web/JavaScript/Array/length", "Array.prototype.length",
-     "Свойство length возвращает количество элементов массива. Длина массива меняется при добавлении элементов."),
-    ("Web/CSS/animation", "animation",
-     "Свойство animation задаёт анимацию элемента: имя, длительность и функцию сглаживания."),
-    ("Web/API/fetch", "fetch()",
-     "Метод fetch запускает сетевой запрос и возвращает промис с ответом сервера."),
-    ("Web/HTTP/Status/404", "404 Not Found",
-     "Код состояния HTTP 404 означает, что сервер не нашёл запрошенный ресурс."),
-]
 
-
-@pytest.fixture
-def documents() -> list[Document]:
-    return [
-        Document.create(
-            slug=slug,
-            title=title,
-            text=text,
-            url=f"https://example.org/{slug}",
-            source_path=f"files/ru/{slug.lower()}/index.md",
-            source_repo="mdn/translated-content",
-            source_ref="main",
-            license="CC-BY-SA-2.5",
-        )
-        for slug, title, text in RAW_DOCUMENTS
-    ]
+def build(kind, documents):
+    # на корпусе из нескольких документов отсечение по min_df выбросило бы почти
+    # все термины, поэтому в тестах оно отключено
+    extra = {"min_df": 1, "max_df": 1.0} if kind == "tfidf" else {}
+    return build_lexical_retriever(kind, documents, **extra)
 
 
 def test_normalize_merges_yo_and_lowercases():
@@ -51,7 +30,7 @@ def test_analyze_stems_russian_and_keeps_english_identifiers():
 
 @pytest.mark.parametrize("kind", ["bm25", "tfidf"])
 def test_search_finds_document_by_paraphrase(kind, documents):
-    retriever = build_lexical_retriever(kind, documents)
+    retriever = build(kind, documents)
     hits = retriever.search("сколько элементов в массиве", top_k=4)
     assert hits[0].doc_id == documents[0].doc_id
     assert hits[0].title == "Array.prototype.length"
@@ -59,7 +38,7 @@ def test_search_finds_document_by_paraphrase(kind, documents):
 
 @pytest.mark.parametrize("kind", ["bm25", "tfidf"])
 def test_results_are_ranked_and_scores_do_not_increase(kind, documents):
-    retriever = build_lexical_retriever(kind, documents)
+    retriever = build(kind, documents)
     hits = retriever.search("анимация элемента css", top_k=4)
     assert [h.rank for h in hits] == [1, 2, 3, 4]
     assert all(a.score >= b.score for a, b in zip(hits, hits[1:]))
@@ -67,14 +46,14 @@ def test_results_are_ranked_and_scores_do_not_increase(kind, documents):
 
 @pytest.mark.parametrize("kind", ["bm25", "tfidf"])
 def test_top_k_is_respected_and_clipped_to_corpus(kind, documents):
-    retriever = build_lexical_retriever(kind, documents)
+    retriever = build(kind, documents)
     assert len(retriever.search("запрос", top_k=2)) == 2
     assert len(retriever.search("запрос", top_k=99)) == len(documents)
 
 
 @pytest.mark.parametrize("kind", ["bm25", "tfidf"])
 def test_unknown_terms_do_not_break_search(kind, documents):
-    hits = build_lexical_retriever(kind, documents).search("ламбумиз крокодилит", top_k=3)
+    hits = build(kind, documents).search("ламбумиз крокодилит", top_k=3)
     assert len(hits) == 3
     assert all(hit.score == pytest.approx(0.0) for hit in hits)
 
