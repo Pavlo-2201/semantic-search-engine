@@ -86,3 +86,53 @@ class ExactDenseRetriever(BaseRetriever):
         query_vectors = self.encoder.encode_queries(list(queries))
         scores = query_vectors @ self.embeddings.T
         return [self._hits_from_scores(row, top_k) for row in scores]
+
+
+class FaissDenseRetriever(BaseRetriever):
+    """Поиск по сохранённому индексу FAISS.
+
+    Документы нужны только для метаданных результата (заголовок, ссылка,
+    фрагмент); ранжирование целиком выполняет индекс. Соответствие позиций
+    индекса и doc_id хранится в самом индексе, поэтому порядок документов в
+    корпусе на результат не влияет.
+    """
+
+    def __init__(self, documents: Sequence[Document], encoder: TextEncoder, index):
+        self.documents_by_id = {d.doc_id: d for d in documents}
+        self.encoder = encoder
+        self.index = index
+        self.name = f"faiss-{index.spec.index_type}:{encoder.config.name}"
+        unknown = set(index.doc_ids) - set(self.documents_by_id)
+        if unknown:
+            raise ValueError(
+                f"в индексе есть {len(unknown)} doc_id, которых нет в корпусе; "
+                "индекс собран на другом корпусе"
+            )
+
+    @property
+    def dim(self) -> int:
+        return int(self.index.dim)
+
+    def search(self, query: str, top_k: int = 10) -> list[SearchHit]:
+        return self.search_batch([query], top_k=top_k)[0]
+
+    def search_batch(self, queries: Sequence[str], top_k: int = 10) -> list[list[SearchHit]]:
+        query_vectors = self.encoder.encode_queries(list(queries))
+        scores, doc_id_rows = self.index.search(query_vectors, top_k)
+        results = []
+        for score_row, doc_ids in zip(scores, doc_id_rows):
+            hits = []
+            for rank, (score, doc_id) in enumerate(zip(score_row, doc_ids), start=1):
+                document = self.documents_by_id[doc_id]
+                hits.append(
+                    SearchHit(
+                        doc_id=doc_id,
+                        score=float(score),
+                        rank=rank,
+                        title=document.title,
+                        url=document.url,
+                        snippet=make_snippet(document.text),
+                    )
+                )
+            results.append(hits)
+        return results
