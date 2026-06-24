@@ -1,0 +1,29 @@
+{
+  "retriever": "tfidf",
+  "label": "tfidf",
+  "corpus": "data/corpus/mdn-ru.jsonl",
+  "corpus_documents": 2570,
+  "corpus_fingerprint": "0f5e613ef25d14835578eb8bb317a8dfbceb1f69eb59ea9c7adc5204031343fe",
+  "queries_file": "data/queries/dev.jsonl",
+  "queries": 36,
+  "index_dir": null,
+  "k_values": [
+    1,
+    5,
+    10
+  ],
+  "metrics": {
+    "recall@1": 0.0926,
+    "mrr@1": 0.1389,
+    "ndcg@1": 0.1204,
+    "recall@5": 0.2315,
+    "mrr@5": 0.1921,
+    "ndcg@5": 0.1847,
+    "recall@10": 0.287,
+    "mrr@10": 0.2007,
+    "ndcg@10": 0.2039
+  },
+  "prepare_seconds": 9.51,
+  "evaluate_seconds": 0.07,
+  "evaluated_at": "2026-10-06T14:33:18Z"
+}
