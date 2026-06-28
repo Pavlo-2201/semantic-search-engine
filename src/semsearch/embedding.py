@@ -233,21 +233,131 @@ class LsaEncoder:
         return encoder
 
 
+class Word2VecEncoder:
+    """Word2Vec, обученный на корпусе; вектор текста — среднее по словам с весом IDF.
+
+    Вторая обучаемая на корпусе модель, устроенная иначе, чем LSA: LSA работает с
+    матрицей «документ — термин» целиком, Word2Vec учится на локальных
+    контекстах слов. Это даёт содержательное сравнение двух векторных моделей
+    даже там, где предобученные веса недоступны.
+
+    Веса IDF нужны, чтобы частые слова не затирали редкие: без них усреднение
+    делает все документы похожими.
+    """
+
+    def __init__(self, config: EncoderConfig):
+        self.config = config
+        self._vectors = None          # gensim KeyedVectors
+        self._idf: dict[str, float] = {}
+        self._default_idf = 1.0
+
+    @property
+    def dim(self) -> int:
+        if self._vectors is None:
+            raise RuntimeError("модель word2vec не обучена")
+        return int(self._vectors.vector_size)
+
+    def fit(self, document_texts: Sequence[str]) -> "Word2VecEncoder":
+        import math
+        from collections import Counter
+
+        from gensim.models import Word2Vec
+
+        from .text import analyze
+
+        tokenized = [analyze(text) for text in document_texts]
+        params = dict(self.config.extra.get("word2vec", {}))
+        model = Word2Vec(
+            sentences=tokenized,
+            vector_size=int(self.config.dim or 200),
+            window=int(params.get("window", 5)),
+            min_count=int(params.get("min_count", 3)),
+            sg=int(params.get("sg", 1)),          # skip-gram: лучше на небольших корпусах
+            negative=int(params.get("negative", 10)),
+            epochs=int(params.get("epochs", 10)),
+            seed=int(params.get("seed", 42)),
+            workers=1,                            # один поток: иначе обучение невоспроизводимо
+        )
+        self._vectors = model.wv
+
+        document_frequency = Counter()
+        for tokens in tokenized:
+            document_frequency.update(set(tokens))
+        n_docs = max(len(tokenized), 1)
+        self._idf = {
+            term: math.log((n_docs + 1) / (count + 1)) + 1.0
+            for term, count in document_frequency.items()
+        }
+        self._default_idf = math.log(n_docs + 1) + 1.0
+        return self
+
+    def _encode(self, texts: Sequence[str]) -> np.ndarray:
+        if self._vectors is None:
+            raise RuntimeError("модель word2vec не обучена: вызовите fit или load")
+        from .text import analyze
+
+        output = np.zeros((len(texts), self.dim), dtype=np.float32)
+        for row, text in enumerate(texts):
+            total_weight = 0.0
+            for token in analyze(text):
+                if token not in self._vectors:
+                    continue
+                weight = self._idf.get(token, self._default_idf)
+                output[row] += weight * self._vectors[token]
+                total_weight += weight
+            if total_weight:
+                output[row] /= total_weight
+        return l2_normalize(output) if self.config.normalize else output
+
+    def encode_queries(self, texts: Sequence[str]) -> np.ndarray:
+        return self._encode(texts)
+
+    def encode_documents(self, texts: Sequence[str]) -> np.ndarray:
+        return self._encode(texts)
+
+    def save(self, path: str | Path) -> None:
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("wb") as handle:
+            pickle.dump(
+                {
+                    "config": self.config,
+                    "vectors": self._vectors,
+                    "idf": self._idf,
+                    "default_idf": self._default_idf,
+                },
+                handle,
+            )
+
+    @classmethod
+    def load(cls, path: str | Path) -> "Word2VecEncoder":
+        with Path(path).open("rb") as handle:
+            state = pickle.load(handle)
+        encoder = cls(state["config"])
+        encoder._vectors = state["vectors"]
+        encoder._idf = state["idf"]
+        encoder._default_idf = state["default_idf"]
+        return encoder
+
+
+#: бэкенды, которые обучаются на корпусе и поэтому хранятся вместе с индексом
+TRAINABLE_BACKENDS = {"lsa": LsaEncoder, "word2vec": Word2VecEncoder}
+
+
 def build_encoder(
     config: EncoderConfig,
     document_texts: Sequence[str] | None = None,
 ) -> TextEncoder:
     """Создать кодировщик по конфигурации.
 
-    `document_texts` нужны только обучаемым на корпусе бэкендам (lsa).
+    `document_texts` нужны только обучаемым на корпусе бэкендам (lsa, word2vec).
     """
     if config.backend == "sentence-transformers":
         return SentenceTransformerEncoder(config)
-    if config.backend == "lsa":
-        encoder = LsaEncoder(config)
+    if config.backend in TRAINABLE_BACKENDS:
         if document_texts is None:
-            raise ValueError("бэкенду lsa нужны тексты документов для обучения")
-        return encoder.fit(document_texts)
+            raise ValueError(f"бэкенду {config.backend} нужны тексты документов для обучения")
+        return TRAINABLE_BACKENDS[config.backend](config).fit(document_texts)
     raise ValueError(f"неизвестный бэкенд: {config.backend}")
 
 

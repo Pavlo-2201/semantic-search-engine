@@ -12,6 +12,22 @@ models:
       поэтому измеряется в любом окружении и служит нижней границей качества
       векторного поиска.
 
+  word2vec-200:
+    backend: word2vec
+    dim: 200
+    normalize: true
+    word2vec:
+      window: 5
+      min_count: 3
+      sg: 1
+      negative: 10
+      epochs: 10
+      seed: 42
+    notes: >
+      Word2Vec (skip-gram), обучается на корпусе; вектор текста — среднее по
+      словам с весом IDF. Устроен иначе, чем LSA: учится на локальных контекстах
+      слов, а не на матрице «документ — термин».
+
   e5-small:
     backend: sentence-transformers
     model_name: intfloat/multilingual-e5-small

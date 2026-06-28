@@ -1,0 +1,353 @@
+{
+  "corpus": "data/corpus/mdn-ru.jsonl",
+  "corpus_documents": 2570,
+  "corpus_fingerprint": "0f5e613ef25d14835578eb8bb317a8dfbceb1f69eb59ea9c7adc5204031343fe",
+  "k_values": [
+    1,
+    5,
+    10
+  ],
+  "compared_at": "2026-10-06T14:38:22Z",
+  "results": {
+    "data/queries/dev.jsonl": [
+      {
+        "name": "bm25",
+        "retriever": "bm25",
+        "config": {
+          "retriever": "bm25"
+        },
+        "queries": 36,
+        "metrics": {
+          "recall@1": 0.125,
+          "mrr@1": 0.1389,
+          "ndcg@1": 0.1389,
+          "recall@5": 0.2315,
+          "mrr@5": 0.1907,
+          "ndcg@5": 0.1941,
+          "recall@10": 0.3611,
+          "mrr@10": 0.2106,
+          "ndcg@10": 0.2379
+        },
+        "prepare_seconds": 9.75,
+        "compare_with": null
+      },
+      {
+        "name": "tfidf",
+        "retriever": "tfidf",
+        "config": {
+          "retriever": "tfidf"
+        },
+        "queries": 36,
+        "metrics": {
+          "recall@1": 0.0926,
+          "mrr@1": 0.1389,
+          "ndcg@1": 0.1204,
+          "recall@5": 0.2315,
+          "mrr@5": 0.1921,
+          "ndcg@5": 0.1847,
+          "recall@10": 0.287,
+          "mrr@10": 0.2007,
+          "ndcg@10": 0.2039
+        },
+        "prepare_seconds": 10.29,
+        "compare_with": null
+      },
+      {
+        "name": "lsa-300",
+        "retriever": "dense-exact:lsa-300",
+        "config": {
+          "retriever": "dense",
+          "model": "lsa-300"
+        },
+        "queries": 36,
+        "metrics": {
+          "recall@1": 0.0926,
+          "mrr@1": 0.1111,
+          "ndcg@1": 0.0926,
+          "recall@5": 0.2454,
+          "mrr@5": 0.1824,
+          "ndcg@5": 0.1933,
+          "recall@10": 0.5046,
+          "mrr@10": 0.219,
+          "ndcg@10": 0.2872
+        },
+        "prepare_seconds": 11.3,
+        "compare_with": null
+      },
+      {
+        "name": "word2vec-200",
+        "retriever": "dense-exact:word2vec-200",
+        "config": {
+          "retriever": "dense",
+          "model": "word2vec-200"
+        },
+        "queries": 36,
+        "metrics": {
+          "recall@1": 0.0787,
+          "mrr@1": 0.1111,
+          "ndcg@1": 0.0926,
+          "recall@5": 0.25,
+          "mrr@5": 0.194,
+          "ndcg@5": 0.197,
+          "recall@10": 0.3889,
+          "mrr@10": 0.2095,
+          "ndcg@10": 0.2393
+        },
+        "prepare_seconds": 42.13,
+        "compare_with": null
+      },
+      {
+        "name": "lsa-300-hnsw",
+        "retriever": "faiss-hnsw:lsa-300",
+        "config": {
+          "retriever": "faiss",
+          "model": "lsa-300",
+          "index_type": "hnsw",
+          "compare_with": "lsa-300"
+        },
+        "queries": 36,
+        "metrics": {
+          "recall@1": 0.0926,
+          "mrr@1": 0.1111,
+          "ndcg@1": 0.0926,
+          "recall@5": 0.2454,
+          "mrr@5": 0.1824,
+          "ndcg@5": 0.1933,
+          "recall@10": 0.5046,
+          "mrr@10": 0.219,
+          "ndcg@10": 0.2872
+        },
+        "prepare_seconds": 0.54,
+        "compare_with": "lsa-300",
+        "loss_vs_exact": {
+          "recall@1": 0.0,
+          "mrr@1": 0.0,
+          "ndcg@1": 0.0,
+          "recall@5": 0.0,
+          "mrr@5": 0.0,
+          "ndcg@5": 0.0,
+          "recall@10": 0.0,
+          "mrr@10": 0.0,
+          "ndcg@10": 0.0
+        }
+      },
+      {
+        "name": "lsa-300-ivf",
+        "retriever": "faiss-ivf-flat:lsa-300",
+        "config": {
+          "retriever": "faiss",
+          "model": "lsa-300",
+          "index_type": "ivf-flat",
+          "nlist": 64,
+          "nprobe": 8,
+          "compare_with": "lsa-300"
+        },
+        "queries": 36,
+        "metrics": {
+          "recall@1": 0.0648,
+          "mrr@1": 0.0833,
+          "ndcg@1": 0.0648,
+          "recall@5": 0.2361,
+          "mrr@5": 0.1745,
+          "ndcg@5": 0.1809,
+          "recall@10": 0.4306,
+          "mrr@10": 0.2098,
+          "ndcg@10": 0.2525
+        },
+        "prepare_seconds": 0.02,
+        "compare_with": "lsa-300",
+        "loss_vs_exact": {
+          "recall@1": -0.0278,
+          "mrr@1": -0.0278,
+          "ndcg@1": -0.0278,
+          "recall@5": -0.0093,
+          "mrr@5": -0.0079,
+          "ndcg@5": -0.0124,
+          "recall@10": -0.074,
+          "mrr@10": -0.0092,
+          "ndcg@10": -0.0347
+        }
+      },
+      {
+        "name": "e5-small",
+        "status": "не измерено",
+        "reason": "требуется доступ к huggingface.co для загрузки весов модели"
+      },
+      {
+        "name": "labse",
+        "status": "не измерено",
+        "reason": "требуется доступ к huggingface.co для загрузки весов модели"
+      }
+    ],
+    "data/queries/test.jsonl": [
+      {
+        "name": "bm25",
+        "retriever": "bm25",
+        "config": {
+          "retriever": "bm25"
+        },
+        "queries": 36,
+        "metrics": {
+          "recall@1": 0.0833,
+          "mrr@1": 0.1111,
+          "ndcg@1": 0.1111,
+          "recall@5": 0.375,
+          "mrr@5": 0.2486,
+          "ndcg@5": 0.2694,
+          "recall@10": 0.5,
+          "mrr@10": 0.2677,
+          "ndcg@10": 0.3149
+        },
+        "prepare_seconds": 9.75,
+        "compare_with": null
+      },
+      {
+        "name": "tfidf",
+        "retriever": "tfidf",
+        "config": {
+          "retriever": "tfidf"
+        },
+        "queries": 36,
+        "metrics": {
+          "recall@1": 0.0972,
+          "mrr@1": 0.1111,
+          "ndcg@1": 0.1111,
+          "recall@5": 0.2778,
+          "mrr@5": 0.1819,
+          "ndcg@5": 0.204,
+          "recall@10": 0.4583,
+          "mrr@10": 0.2089,
+          "ndcg@10": 0.2577
+        },
+        "prepare_seconds": 10.29,
+        "compare_with": null
+      },
+      {
+        "name": "lsa-300",
+        "retriever": "dense-exact:lsa-300",
+        "config": {
+          "retriever": "dense",
+          "model": "lsa-300"
+        },
+        "queries": 36,
+        "metrics": {
+          "recall@1": 0.0972,
+          "mrr@1": 0.1111,
+          "ndcg@1": 0.1111,
+          "recall@5": 0.375,
+          "mrr@5": 0.2319,
+          "ndcg@5": 0.254,
+          "recall@10": 0.5694,
+          "mrr@10": 0.2549,
+          "ndcg@10": 0.3218
+        },
+        "prepare_seconds": 11.3,
+        "compare_with": null
+      },
+      {
+        "name": "word2vec-200",
+        "retriever": "dense-exact:word2vec-200",
+        "config": {
+          "retriever": "dense",
+          "model": "word2vec-200"
+        },
+        "queries": 36,
+        "metrics": {
+          "recall@1": 0.0694,
+          "mrr@1": 0.1111,
+          "ndcg@1": 0.1111,
+          "recall@5": 0.4028,
+          "mrr@5": 0.2449,
+          "ndcg@5": 0.2688,
+          "recall@10": 0.5278,
+          "mrr@10": 0.2649,
+          "ndcg@10": 0.3068
+        },
+        "prepare_seconds": 42.13,
+        "compare_with": null
+      },
+      {
+        "name": "lsa-300-hnsw",
+        "retriever": "faiss-hnsw:lsa-300",
+        "config": {
+          "retriever": "faiss",
+          "model": "lsa-300",
+          "index_type": "hnsw",
+          "compare_with": "lsa-300"
+        },
+        "queries": 36,
+        "metrics": {
+          "recall@1": 0.0972,
+          "mrr@1": 0.1111,
+          "ndcg@1": 0.1111,
+          "recall@5": 0.375,
+          "mrr@5": 0.2319,
+          "ndcg@5": 0.254,
+          "recall@10": 0.5694,
+          "mrr@10": 0.2549,
+          "ndcg@10": 0.3218
+        },
+        "prepare_seconds": 0.54,
+        "compare_with": "lsa-300",
+        "loss_vs_exact": {
+          "recall@1": 0.0,
+          "mrr@1": 0.0,
+          "ndcg@1": 0.0,
+          "recall@5": 0.0,
+          "mrr@5": 0.0,
+          "ndcg@5": 0.0,
+          "recall@10": 0.0,
+          "mrr@10": 0.0,
+          "ndcg@10": 0.0
+        }
+      },
+      {
+        "name": "lsa-300-ivf",
+        "retriever": "faiss-ivf-flat:lsa-300",
+        "config": {
+          "retriever": "faiss",
+          "model": "lsa-300",
+          "index_type": "ivf-flat",
+          "nlist": 64,
+          "nprobe": 8,
+          "compare_with": "lsa-300"
+        },
+        "queries": 36,
+        "metrics": {
+          "recall@1": 0.0972,
+          "mrr@1": 0.1111,
+          "ndcg@1": 0.1111,
+          "recall@5": 0.3611,
+          "mrr@5": 0.2218,
+          "ndcg@5": 0.2443,
+          "recall@10": 0.5556,
+          "mrr@10": 0.2467,
+          "ndcg@10": 0.314
+        },
+        "prepare_seconds": 0.02,
+        "compare_with": "lsa-300",
+        "loss_vs_exact": {
+          "recall@1": 0.0,
+          "mrr@1": 0.0,
+          "ndcg@1": 0.0,
+          "recall@5": -0.0139,
+          "mrr@5": -0.0101,
+          "ndcg@5": -0.0097,
+          "recall@10": -0.0138,
+          "mrr@10": -0.0082,
+          "ndcg@10": -0.0078
+        }
+      },
+      {
+        "name": "e5-small",
+        "status": "не измерено",
+        "reason": "требуется доступ к huggingface.co для загрузки весов модели"
+      },
+      {
+        "name": "labse",
+        "status": "не измерено",
+        "reason": "требуется доступ к huggingface.co для загрузки весов модели"
+      }
+    ]
+  }
+}

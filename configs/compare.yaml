@@ -1,0 +1,47 @@
+# Какие способы поиска сравнивать и на каких запросах.
+# Корпус и набор запросов у всех прогонов одни и те же — иначе сравнение
+# ничего не значит.
+
+corpus: data/corpus/mdn-ru.jsonl
+queries:
+  - data/queries/dev.jsonl
+  - data/queries/test.jsonl
+k_values: [1, 5, 10]
+output_dir: results
+
+runs:
+  - name: bm25
+    retriever: bm25
+  - name: tfidf
+    retriever: tfidf
+  - name: lsa-300
+    retriever: dense
+    model: lsa-300
+  - name: word2vec-200
+    retriever: dense
+    model: word2vec-200
+  # приближённые индексы на той же модели: нужны, чтобы измерить потерю
+  # качества относительно точного поиска
+  - name: lsa-300-hnsw
+    retriever: faiss
+    model: lsa-300
+    index_type: hnsw
+    compare_with: lsa-300
+  - name: lsa-300-ivf
+    retriever: faiss
+    model: lsa-300
+    index_type: ivf-flat
+    nlist: 64
+    nprobe: 8
+    compare_with: lsa-300
+
+  # Прогоны ниже требуют доступа к huggingface.co. В окружении, где собирался
+  # проект, его нет, поэтому они отключены, а в таблице стоит «не измерено».
+  - name: e5-small
+    retriever: dense
+    model: e5-small
+    enabled: false
+  - name: labse
+    retriever: dense
+    model: labse
+    enabled: false

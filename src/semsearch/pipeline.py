@@ -10,8 +10,8 @@ from typing import Sequence
 from .corpus import Document, corpus_fingerprint
 from .dense import ExactDenseRetriever, FaissDenseRetriever, encode_corpus
 from .embedding import (
+    TRAINABLE_BACKENDS,
     EncoderConfig,
-    LsaEncoder,
     build_document_text,
     build_encoder,
     load_model_configs,
@@ -46,22 +46,22 @@ def save_encoder(encoder, directory: str | Path) -> None:
     """Сохранить кодировщик рядом с индексом, если он этого требует.
 
     Предобученная модель sentence-transformers восстанавливается по имени из
-    конфигурации, а обученный на корпусе lsa нужно сохранить: иначе запрос будет
-    закодирован другой моделью, чем документы в индексе.
+    конфигурации, а обученную на корпусе (lsa, word2vec) нужно сохранить: иначе
+    запрос будет закодирован другой моделью, чем документы в индексе.
     """
-    if isinstance(encoder, LsaEncoder):
+    if encoder.config.backend in TRAINABLE_BACKENDS:
         encoder.save(Path(directory) / ENCODER_FILENAME)
 
 
 def load_encoder(config: EncoderConfig, directory: str | Path):
-    if config.backend == "lsa":
+    if config.backend in TRAINABLE_BACKENDS:
         path = Path(directory) / ENCODER_FILENAME
         if not path.exists():
             raise FileNotFoundError(
-                f"рядом с индексом нет {ENCODER_FILENAME}: модель lsa обучается на корпусе "
-                "и должна храниться вместе с индексом"
+                f"рядом с индексом нет {ENCODER_FILENAME}: модель {config.backend} обучается "
+                "на корпусе и должна храниться вместе с индексом"
             )
-        return LsaEncoder.load(path)
+        return TRAINABLE_BACKENDS[config.backend].load(path)
     return build_encoder(config)
 
 

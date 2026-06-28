@@ -156,3 +156,46 @@ def test_exact_dense_retriever_works_with_sentence_transformer(documents, tiny_s
     assert len(hits) == 4
     assert [h.rank for h in hits] == [1, 2, 3, 4]
     assert len({h.doc_id for h in hits}) == 4
+
+
+# --- вторая обучаемая на корпусе модель: word2vec ---
+
+W2V_CONFIG = EncoderConfig(
+    name="w2v-test",
+    backend="word2vec",
+    dim=16,
+    extra={"word2vec": {"min_count": 1, "epochs": 5, "window": 3, "seed": 42}},
+)
+
+
+def test_word2vec_encoder_is_normalized_and_reproducible(documents):
+    texts = document_texts(documents)
+    first = build_encoder(W2V_CONFIG, texts).encode_documents(texts)
+    second = build_encoder(W2V_CONFIG, texts).encode_documents(texts)
+    assert first.shape == (len(documents), 16)
+    assert np.linalg.norm(first, axis=1) == pytest.approx(1.0, abs=1e-5)
+    # обучение в один поток с фиксированным seed должно быть воспроизводимым
+    assert np.allclose(first, second)
+
+
+def test_word2vec_encoder_save_and_load_give_same_vectors(documents, tmp_path):
+    from semsearch.embedding import Word2VecEncoder
+
+    encoder = build_encoder(W2V_CONFIG, document_texts(documents))
+    before = encoder.encode_queries(["длина массива"])
+    path = tmp_path / "w2v.pkl"
+    encoder.save(path)
+    assert np.allclose(before, Word2VecEncoder.load(path).encode_queries(["длина массива"]))
+
+
+def test_word2vec_encoder_handles_text_without_known_words(documents):
+    encoder = build_encoder(W2V_CONFIG, document_texts(documents))
+    vectors = encoder.encode_queries(["ламбумиз крокодилит"])
+    # неизвестные слова дают нулевой вектор, а не ошибку
+    assert vectors.shape == (1, 16)
+    assert np.allclose(vectors, 0.0)
+
+
+def test_unknown_backend_is_rejected():
+    with pytest.raises(ValueError, match="неизвестный бэкенд"):
+        build_encoder(EncoderConfig(name="x", backend="нет такого"), ["текст"])
