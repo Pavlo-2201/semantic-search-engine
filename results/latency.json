@@ -1,0 +1,136 @@
+{
+  "corpus": "data/corpus/mdn-ru.jsonl",
+  "corpus_documents": 2570,
+  "corpus_fingerprint": "0f5e613ef25d14835578eb8bb317a8dfbceb1f69eb59ea9c7adc5204031343fe",
+  "queries_file": "data/queries/dev.jsonl",
+  "queries": 36,
+  "top_k": 10,
+  "repeats": 200,
+  "warmup": 20,
+  "percentile_definition": "ближайший ранг по отсортированным измерениям",
+  "hardware": {
+    "platform": "Linux-6.18.44-fc-v70-x86_64-with-glibc2.39",
+    "python": "3.13.16",
+    "processor": "x86_64",
+    "cpu_count": 4,
+    "cpu_model": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "memory_total_gb": 15.7,
+    "gpu": "нет (измерения на CPU)",
+    "faiss": "1.15.1",
+    "faiss_threads": 4,
+    "numpy": "2.5.3"
+  },
+  "measured_at": "2026-10-06T14:48:26Z",
+  "runs": {
+    "bm25": {
+      "search": {
+        "measurements": 200,
+        "mean_ms": 1.145,
+        "p50_ms": 1.105,
+        "p95_ms": 1.919,
+        "min_ms": 0.4,
+        "max_ms": 2.415
+      },
+      "total_p50_ms": 1.105,
+      "total_p95_ms": 1.919,
+      "note": "лексический поиск измерен целиком: разбор запроса на термины неотделим от обхода словаря"
+    },
+    "tfidf": {
+      "search": {
+        "measurements": 200,
+        "mean_ms": 1.951,
+        "p50_ms": 1.894,
+        "p95_ms": 2.406,
+        "min_ms": 1.575,
+        "max_ms": 3.445
+      },
+      "total_p50_ms": 1.894,
+      "total_p95_ms": 2.406,
+      "note": "лексический поиск измерен целиком: разбор запроса на термины неотделим от обхода словаря"
+    },
+    "lsa-300": {
+      "query_encoding": {
+        "measurements": 200,
+        "mean_ms": 8.735,
+        "p50_ms": 8.544,
+        "p95_ms": 10.459,
+        "min_ms": 7.297,
+        "max_ms": 13.008
+      },
+      "index_search": {
+        "measurements": 200,
+        "mean_ms": 0.519,
+        "p50_ms": 0.439,
+        "p95_ms": 1.417,
+        "min_ms": 0.144,
+        "max_ms": 1.746
+      },
+      "total_p50_ms": 8.983,
+      "total_p95_ms": 11.876,
+      "retriever": "dense-exact:lsa-300"
+    },
+    "word2vec-200": {
+      "query_encoding": {
+        "measurements": 200,
+        "mean_ms": 0.114,
+        "p50_ms": 0.11,
+        "p95_ms": 0.178,
+        "min_ms": 0.053,
+        "max_ms": 0.251
+      },
+      "index_search": {
+        "measurements": 200,
+        "mean_ms": 0.499,
+        "p50_ms": 0.48,
+        "p95_ms": 0.95,
+        "min_ms": 0.181,
+        "max_ms": 1.194
+      },
+      "total_p50_ms": 0.59,
+      "total_p95_ms": 1.128,
+      "retriever": "dense-exact:word2vec-200"
+    },
+    "lsa-300-hnsw": {
+      "query_encoding": {
+        "measurements": 200,
+        "mean_ms": 6.244,
+        "p50_ms": 6.011,
+        "p95_ms": 7.34,
+        "min_ms": 5.365,
+        "max_ms": 8.587
+      },
+      "index_search": {
+        "measurements": 200,
+        "mean_ms": 0.099,
+        "p50_ms": 0.087,
+        "p95_ms": 0.161,
+        "min_ms": 0.058,
+        "max_ms": 0.264
+      },
+      "total_p50_ms": 6.098,
+      "total_p95_ms": 7.501,
+      "retriever": "faiss-hnsw:lsa-300"
+    },
+    "lsa-300-ivf": {
+      "query_encoding": {
+        "measurements": 200,
+        "mean_ms": 7.347,
+        "p50_ms": 7.297,
+        "p95_ms": 8.02,
+        "min_ms": 6.161,
+        "max_ms": 9.723
+      },
+      "index_search": {
+        "measurements": 200,
+        "mean_ms": 0.031,
+        "p50_ms": 0.027,
+        "p95_ms": 0.057,
+        "min_ms": 0.02,
+        "max_ms": 0.11
+      },
+      "total_p50_ms": 7.324,
+      "total_p95_ms": 8.077,
+      "retriever": "faiss-ivf-flat:lsa-300"
+    }
+  }
+}
