@@ -26,7 +26,7 @@ from semsearch.corpus import load_corpus  # noqa: E402
 from semsearch.evaluation import evaluate_queries, load_queries  # noqa: E402
 from semsearch.pipeline import build_retriever  # noqa: E402
 
-DEFAULT_RUNS = "bm25,tfidf,dense:lsa-300,dense:word2vec-200"
+DEFAULT_RUNS = "bm25,tfidf,dense:lsa-300,dense:word2vec-200,dense:rubert-tiny2"
 LEXICAL = ("bm25", "tfidf")
 
 

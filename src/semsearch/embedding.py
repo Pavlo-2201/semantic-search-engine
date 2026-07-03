@@ -32,6 +32,10 @@ class EncoderConfig:
     name: str
     backend: str
     model_name: str | None = None
+    #: ревизия модели на Hugging Face; фиксирует веса так же, как commit sha данные
+    revision: str | None = None
+    #: каталог с уже скачанными весами; нужен там, где нет доступа к huggingface.co
+    local_path: str | None = None
     query_prefix: str = ""
     document_prefix: str = ""
     pooling: str = "mean"          # mean | cls — проверяется по загруженной модели
@@ -56,6 +60,8 @@ class EncoderConfig:
             "name": self.name,
             "backend": self.backend,
             "model_name": self.model_name,
+            "revision": self.revision,
+            "local_path": self.local_path,
             "query_prefix": self.query_prefix,
             "document_prefix": self.document_prefix,
             "pooling": self.pooling,
@@ -94,6 +100,28 @@ class TextEncoder(Protocol):
         ...
 
 
+def local_weights_path(config: EncoderConfig) -> Path | None:
+    """Каталог с локальными весами, если он задан и существует."""
+    if not config.local_path:
+        return None
+    path = Path(config.local_path)
+    return path if path.exists() else None
+
+
+def sentence_transformer_kwargs(config: EncoderConfig) -> dict:
+    """Откуда грузить модель: локальный каталог или Hugging Face с фиксированной ревизией."""
+    local = local_weights_path(config)
+    if local is not None:
+        # веса уже скачаны: сеть не нужна, ревизию задаёт сам каталог
+        return {"model_name_or_path": str(local), "local_files_only": True}
+    if not config.model_name:
+        raise ValueError("для бэкенда sentence-transformers нужен model_name или local_path")
+    kwargs = {"model_name_or_path": config.model_name}
+    if config.revision:
+        kwargs["revision"] = config.revision
+    return kwargs
+
+
 class SentenceTransformerEncoder:
     """Обёртка над sentence-transformers.
 
@@ -113,9 +141,7 @@ class SentenceTransformerEncoder:
 
         self.config = config
         if model is None:
-            if not config.model_name:
-                raise ValueError("для бэкенда sentence-transformers нужен model_name")
-            model = SentenceTransformer(config.model_name)
+            model = SentenceTransformer(**sentence_transformer_kwargs(config))
         self.model = model
         if config.max_seq_length:
             self.model.max_seq_length = config.max_seq_length

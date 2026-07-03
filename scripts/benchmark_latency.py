@@ -26,15 +26,25 @@ from semsearch.latency import (  # noqa: E402
     measure_end_to_end_latency,
 )
 from semsearch.lexical import build_lexical_retriever  # noqa: E402
+from semsearch.embedding import local_weights_path  # noqa: E402
 from semsearch.pipeline import build_encoder_for_corpus, resolve_model_config  # noqa: E402
 
 # Что измеряем по умолчанию: лексический baseline, точный векторный поиск и
 # оба приближённых индекса на одной модели.
-DEFAULT_RUNS = ("bm25", "tfidf", "lsa-300", "word2vec-200", "lsa-300-hnsw", "lsa-300-ivf")
+DEFAULT_RUNS = (
+    "bm25",
+    "tfidf",
+    "lsa-300",
+    "word2vec-200",
+    "rubert-tiny2",
+    "lsa-300-hnsw",
+    "lsa-300-ivf",
+)
 
 DENSE_RUNS = {
     "lsa-300": {"model": "lsa-300", "index": None},
     "word2vec-200": {"model": "word2vec-200", "index": None},
+    "rubert-tiny2": {"model": "rubert-tiny2", "index": None},
     "lsa-300-flat": {"model": "lsa-300", "index": IndexSpec(index_type="flat-ip")},
     "lsa-300-hnsw": {"model": "lsa-300", "index": IndexSpec(index_type="hnsw")},
     "lsa-300-ivf": {"model": "lsa-300", "index": IndexSpec(index_type="ivf-flat", nlist=64)},
@@ -91,8 +101,17 @@ def main() -> int:
         elif name in DENSE_RUNS:
             spec = DENSE_RUNS[name]["index"]
             model_name = DENSE_RUNS[name]["model"]
+            config = resolve_model_config(model_name, args.models_config)
+            if config.backend == "sentence-transformers" and config.local_path:
+                if local_weights_path(config) is None:
+                    report["runs"][name] = {
+                        "status": "не измерено",
+                        "reason": f"нет скачанных весов в {config.local_path}",
+                    }
+                    if not args.quiet:
+                        print(f"{name}: не измерено (нет скачанных весов)")
+                    continue
             if model_name not in encoder_cache:
-                config = resolve_model_config(model_name, args.models_config)
                 encoder = build_encoder_for_corpus(config, documents)
                 encoder_cache[model_name] = (
                     config,

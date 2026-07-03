@@ -1,18 +1,13 @@
-import sys
-from pathlib import Path
-
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-from semsearch.corpus import (  # noqa: E402
+from semsearch.corpus import (
     Document,
     corpus_fingerprint,
     load_corpus,
     make_doc_id,
     write_corpus,
 )
-from semsearch.mdn import extract_title, markdown_to_text, slug_to_folder  # noqa: E402
+from semsearch.mdn import extract_title, markdown_to_text, slug_to_folder
 
 
 def make_document(slug: str, text: str = "текст документа") -> Document:

@@ -1,0 +1,16 @@
+[project]
+name = "semantic-search-engine"
+version = "1.0.0"
+description = "Поиск по русскоязычной технической документации: лексический baseline, embeddings, FAISS"
+requires-python = ">=3.11"
+readme = "README.md"
+
+[tool.pytest.ini_options]
+# тесты импортируют пакет из src без установки
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::FutureWarning",
+]

@@ -1,13 +1,10 @@
 import json
-import sys
 from pathlib import Path
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-from semsearch.corpus import make_doc_id  # noqa: E402
-from semsearch.evaluation import (  # noqa: E402
+from semsearch.corpus import make_doc_id
+from semsearch.evaluation import (
     LabeledQuery,
     evaluate_queries,
     load_queries,
@@ -15,7 +12,7 @@ from semsearch.evaluation import (  # noqa: E402
     recall_at_k,
     reciprocal_rank_at_k,
 )
-from semsearch.retriever import SearchHit  # noqa: E402
+from semsearch.retriever import SearchHit
 
 REPO = Path(__file__).resolve().parents[1]
 

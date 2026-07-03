@@ -29,6 +29,7 @@ from semsearch.dense import ExactDenseRetriever, FaissDenseRetriever  # noqa: E4
 from semsearch.evaluation import evaluate_queries, load_queries  # noqa: E402
 from semsearch.faiss_index import IndexSpec, VectorIndex  # noqa: E402
 from semsearch.lexical import build_lexical_retriever  # noqa: E402
+from semsearch.embedding import local_weights_path  # noqa: E402
 from semsearch.pipeline import (  # noqa: E402
     build_encoder_for_corpus,
     resolve_model_config,
@@ -78,6 +79,20 @@ def make_retriever(run: dict, documents, models_config: str, cache: dict):
     raise ValueError(f"неизвестный способ поиска: {kind}")
 
 
+def skip_reason(run: dict, models_config: str) -> str | None:
+    """Почему прогон не выполняется: выключен или нет скачанных весов."""
+    if not run.get("enabled", True):
+        return "требуется доступ к huggingface.co для загрузки весов модели"
+    model_name = run.get("model")
+    if not model_name:
+        return None
+    config = resolve_model_config(model_name, models_config)
+    if config.backend == "sentence-transformers" and config.local_path:
+        if local_weights_path(config) is None:
+            return f"нет скачанных весов в {config.local_path}"
+    return None
+
+
 def format_table(rows: list[dict], queries_file: str, k_values: list[int]) -> str:
     columns = [f"Recall@{k}" for k in k_values] + [f"MRR@{max(k_values)}", f"nDCG@{max(k_values)}"]
     lines = [
@@ -119,8 +134,8 @@ def main() -> int:
 
     for run in config["runs"]:
         name = run["name"]
-        if not run.get("enabled", True):
-            reason = "требуется доступ к huggingface.co для загрузки весов модели"
+        reason = skip_reason(run, args.models_config)
+        if reason:
             for path in query_files:
                 results[path].append({"name": name, "status": NOT_MEASURED, "reason": reason})
             if not args.quiet:

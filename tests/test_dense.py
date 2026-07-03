@@ -1,13 +1,10 @@
-import sys
 from pathlib import Path
 
 import numpy as np
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-from semsearch.dense import ExactDenseRetriever, encode_corpus  # noqa: E402
-from semsearch.embedding import (  # noqa: E402
+from semsearch.dense import ExactDenseRetriever, encode_corpus
+from semsearch.embedding import (
     EncoderConfig,
     LsaEncoder,
     SentenceTransformerEncoder,
@@ -199,3 +196,53 @@ def test_word2vec_encoder_handles_text_without_known_words(documents):
 def test_unknown_backend_is_rejected():
     with pytest.raises(ValueError, match="неизвестный бэкенд"):
         build_encoder(EncoderConfig(name="x", backend="нет такого"), ["текст"])
+
+
+# --- загрузка весов: локальный каталог или Hugging Face ---
+
+
+def test_sentence_transformer_kwargs_prefers_existing_local_weights(tmp_path):
+    from semsearch.embedding import sentence_transformer_kwargs
+
+    weights = tmp_path / "weights"
+    weights.mkdir()
+    config = EncoderConfig(
+        name="local",
+        backend="sentence-transformers",
+        model_name="org/model",
+        revision="abc123",
+        local_path=str(weights),
+    )
+    kwargs = sentence_transformer_kwargs(config)
+    assert kwargs == {"model_name_or_path": str(weights), "local_files_only": True}
+
+
+def test_sentence_transformer_kwargs_falls_back_to_hub_with_revision(tmp_path):
+    from semsearch.embedding import sentence_transformer_kwargs
+
+    config = EncoderConfig(
+        name="hub",
+        backend="sentence-transformers",
+        model_name="org/model",
+        revision="abc123",
+        local_path=str(tmp_path / "нет-такого-каталога"),
+    )
+    assert sentence_transformer_kwargs(config) == {
+        "model_name_or_path": "org/model",
+        "revision": "abc123",
+    }
+
+
+def test_model_config_of_rubert_matches_its_own_pooling_config():
+    """Пулинг в конфигурации должен совпадать с 1_Pooling/config.json модели."""
+    import json
+
+    configs = load_model_configs(Path(__file__).resolve().parents[1] / "configs/models.yaml")
+    config = configs["rubert-tiny2"]
+    assert config.revision, "ревизия модели должна быть зафиксирована"
+    pooling_config = Path(config.local_path or "") / "1_Pooling/config.json"
+    if not pooling_config.exists():
+        pytest.skip("веса rubert-tiny2 не скачаны")
+    declared = json.loads(pooling_config.read_text(encoding="utf-8"))
+    expected = "cls" if declared.get("pooling_mode_cls_token") else "mean"
+    assert config.pooling == expected

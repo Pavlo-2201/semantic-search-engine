@@ -8,14 +8,10 @@
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-from semsearch.corpus import Document  # noqa: E402
+from semsearch.corpus import Document
 
 SAMPLE_DOCUMENTS = [
     ("Web/JavaScript/Array/length", "Array.prototype.length",

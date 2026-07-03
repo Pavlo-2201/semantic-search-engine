@@ -66,10 +66,16 @@ models:
   rubert-tiny2:
     backend: sentence-transformers
     model_name: cointegrated/rubert-tiny2
+    revision: e8ed3b0c8bbf4fb6984c3de043bf7d2f4e5969ae
+    # каталог с заранее скачанными весами: в окружении сборки нет доступа к
+    # huggingface.co, и веса принесены в репозиторий извне (в Git не попадают)
+    local_path: models/rubert-tiny2
     query_prefix: ""
     document_prefix: ""
-    pooling: mean
+    # пулинг взят из 1_Pooling/config.json самой модели: у rubert-tiny2 это CLS,
+    # а не среднее — проверка пулинга в коде ловит такую ошибку конфигурации
+    pooling: cls
     normalize: true
     max_seq_length: 512
     batch_size: 64
-    notes: Маленькая русская модель, 312 измерений, лицензия MIT.
+    notes: Маленькая русская модель sentence-transformers, 312 измерений, лицензия MIT.

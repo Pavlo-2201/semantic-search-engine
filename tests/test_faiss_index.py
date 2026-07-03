@@ -1,16 +1,11 @@
-import sys
-from pathlib import Path
-
 import numpy as np
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-from semsearch.corpus import corpus_fingerprint  # noqa: E402
-from semsearch.dense import ExactDenseRetriever, FaissDenseRetriever  # noqa: E402
-from semsearch.embedding import EncoderConfig  # noqa: E402
-from semsearch.faiss_index import IndexSpec, VectorIndex  # noqa: E402
-from semsearch.pipeline import (  # noqa: E402
+from semsearch.corpus import corpus_fingerprint
+from semsearch.dense import ExactDenseRetriever, FaissDenseRetriever
+from semsearch.embedding import EncoderConfig
+from semsearch.faiss_index import IndexSpec, VectorIndex
+from semsearch.pipeline import (
     build_encoder_for_corpus,
     build_index,
     load_index_retriever,

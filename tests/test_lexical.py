@@ -1,13 +1,8 @@
-import sys
-from pathlib import Path
-
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-from semsearch.corpus import Document  # noqa: E402
-from semsearch.lexical import Bm25Retriever, TfidfRetriever, build_lexical_retriever  # noqa: E402
-from semsearch.text import analyze, normalize  # noqa: E402
+from semsearch.corpus import Document
+from semsearch.lexical import Bm25Retriever, TfidfRetriever, build_lexical_retriever
+from semsearch.text import analyze, normalize
 
 
 def build(kind, documents):
