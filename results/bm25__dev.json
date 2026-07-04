@@ -23,7 +23,7 @@
     "mrr@10": 0.2106,
     "ndcg@10": 0.2379
   },
-  "prepare_seconds": 9.25,
+  "prepare_seconds": 9.16,
   "evaluate_seconds": 0.04,
-  "evaluated_at": "2026-10-06T14:33:07Z"
+  "evaluated_at": "2026-10-06T15:00:13Z"
 }

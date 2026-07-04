@@ -24,29 +24,14 @@
           "нашёл на первом месте": 4,
           "нашёл в top-10": 17,
           "не нашёл": 19
+        },
+        "dense:rubert-tiny2": {
+          "нашёл на первом месте": 3,
+          "нашёл в top-10": 11,
+          "не нашёл": 25
         }
       },
       "failed_everywhere": [
-        {
-          "query_id": "dev-004",
-          "query": "проверить есть ли значение в массиве",
-          "relevant": [
-            "Web/JavaScript/Reference/Global_Objects/Array/includes",
-            "Web/JavaScript/Reference/Global_Objects/Array/indexOf"
-          ],
-          "top1": {
-            "bm25": "in",
-            "tfidf": "Массив",
-            "dense:lsa-300": "TypedArray.prototype.set()",
-            "dense:word2vec-200": "TypedArray.prototype.set()"
-          },
-          "ranks": {
-            "bm25": null,
-            "tfidf": null,
-            "dense:lsa-300": null,
-            "dense:word2vec-200": null
-          }
-        },
         {
           "query_id": "dev-009",
           "query": "дождаться выполнения нескольких асинхронных операций сразу",
@@ -58,13 +43,15 @@
             "bm25": "Введение в асинхронный JavaScript",
             "tfidf": "Асинхронный",
             "dense:lsa-300": "Использование промисов",
-            "dense:word2vec-200": "Использование промисов"
+            "dense:word2vec-200": "Использование промисов",
+            "dense:rubert-tiny2": "Использование промисов"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -77,13 +64,15 @@
             "bm25": "500 Internal Server Error",
             "tfidf": "WebGLProgram",
             "dense:lsa-300": "WebGLProgram",
-            "dense:word2vec-200": "Error"
+            "dense:word2vec-200": "Error",
+            "dense:rubert-tiny2": "Что пошло не так? Устранение ошибок JavaScript"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -96,33 +85,15 @@
             "bm25": "MouseEvent.button",
             "tfidf": "MouseEvent.button",
             "dense:lsa-300": "MouseEvent.button",
-            "dense:word2vec-200": "MouseEvent.button"
+            "dense:word2vec-200": "MouseEvent.button",
+            "dense:rubert-tiny2": "<input type=\"button\">"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
-          }
-        },
-        {
-          "query_id": "dev-018",
-          "query": "найти элемент на странице по селектору",
-          "relevant": [
-            "Web/API/Document/querySelector",
-            "Web/API/Element/querySelector"
-          ],
-          "top1": {
-            "bm25": "Селекторы CSS",
-            "tfidf": "Селекторы по ID",
-            "dense:lsa-300": "Селектор дочерних элементов",
-            "dense:word2vec-200": "Селекторы CSS"
-          },
-          "ranks": {
-            "bm25": null,
-            "tfidf": null,
-            "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -136,13 +107,15 @@
             "bm25": "Как настроить локальный сервер для тестирования?",
             "tfidf": "Прокси сервер",
             "dense:lsa-300": "OPTIONS",
-            "dense:word2vec-200": "Коды состояния ответа HTTP"
+            "dense:word2vec-200": "Коды состояния ответа HTTP",
+            "dense:rubert-tiny2": "CORS"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -156,32 +129,15 @@
             "bm25": "Event: свойство target",
             "tfidf": "Event: свойство target",
             "dense:lsa-300": "Event: свойство target",
-            "dense:word2vec-200": "Event"
+            "dense:word2vec-200": "Event",
+            "dense:rubert-tiny2": "Event.bubbles"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
-          }
-        },
-        {
-          "query_id": "dev-022",
-          "query": "добавить класс элементу из кода",
-          "relevant": [
-            "Web/API/Element/classList"
-          ],
-          "top1": {
-            "bm25": "Начало работы с CSS",
-            "tfidf": "Селекторы по классу",
-            "dense:lsa-300": "Селекторы по классу",
-            "dense:word2vec-200": "constructor"
-          },
-          "ranks": {
-            "bm25": null,
-            "tfidf": null,
-            "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -194,13 +150,15 @@
             "bm25": "Производительность анимации и частота кадров",
             "tfidf": "Частота кадров (FPS)",
             "dense:lsa-300": "animation-delay",
-            "dense:word2vec-200": "Использование CSS-анимации"
+            "dense:word2vec-200": "Использование CSS-анимации",
+            "dense:rubert-tiny2": "description"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -213,13 +171,15 @@
             "bm25": "404 Not Found",
             "tfidf": "404 Not Found",
             "dense:lsa-300": "IP-адрес",
-            "dense:word2vec-200": "URL"
+            "dense:word2vec-200": "URL",
+            "dense:rubert-tiny2": "Пересчёт (Reflow)"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -232,13 +192,15 @@
             "bm25": "HTTP",
             "tfidf": "Доменное имя",
             "dense:lsa-300": "Error: Permission denied to access property \"x\"",
-            "dense:word2vec-200": "Referer"
+            "dense:word2vec-200": "Referer",
+            "dense:rubert-tiny2": "FileReader.error"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         }
       ],
@@ -253,17 +215,41 @@
             "bm25": "Array.prototype.concat()",
             "tfidf": "Array.prototype.concat()",
             "dense:lsa-300": "Array.prototype.reverse()",
-            "dense:word2vec-200": "Array"
+            "dense:word2vec-200": "Array",
+            "dense:rubert-tiny2": "Смежные селекторы"
           },
           "ranks": {
             "bm25": 10,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         }
       ],
       "dense_found_lexical_missed": [
+        {
+          "query_id": "dev-004",
+          "query": "проверить есть ли значение в массиве",
+          "relevant": [
+            "Web/JavaScript/Reference/Global_Objects/Array/includes",
+            "Web/JavaScript/Reference/Global_Objects/Array/indexOf"
+          ],
+          "top1": {
+            "bm25": "in",
+            "tfidf": "Массив",
+            "dense:lsa-300": "TypedArray.prototype.set()",
+            "dense:word2vec-200": "TypedArray.prototype.set()",
+            "dense:rubert-tiny2": "Error: Permission denied to access property \"x\""
+          },
+          "ranks": {
+            "bm25": null,
+            "tfidf": null,
+            "dense:lsa-300": null,
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": 2
+          }
+        },
         {
           "query_id": "dev-005",
           "query": "заменить часть строки на другую",
@@ -275,13 +261,15 @@
             "bm25": "String.prototype.substring()",
             "tfidf": "String.prototype.substring()",
             "dense:lsa-300": "VRStageParameters: свойство sittingToStandingTransform",
-            "dense:word2vec-200": "Node.replaceChild"
+            "dense:word2vec-200": "Node.replaceChild",
+            "dense:rubert-tiny2": "SyntaxError: string literal contains an unescaped line break"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": 3
+            "dense:word2vec-200": 3,
+            "dense:rubert-tiny2": 3
           }
         },
         {
@@ -295,13 +283,15 @@
             "bm25": "JavaScript APIs",
             "tfidf": "Асинхронный",
             "dense:lsa-300": "Делаем асинхронное программирование более простым с async и await",
-            "dense:word2vec-200": "Асинхронные скрипты для asm.js"
+            "dense:word2vec-200": "Асинхронные скрипты для asm.js",
+            "dense:rubert-tiny2": "async function expression"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": 5,
-            "dense:word2vec-200": 4
+            "dense:word2vec-200": 4,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -314,13 +304,58 @@
             "bm25": "Number.prototype.toExponential()",
             "tfidf": "Math.round()",
             "dense:lsa-300": "Number.prototype.toExponential()",
-            "dense:word2vec-200": "Number.prototype.toExponential()"
+            "dense:word2vec-200": "Number.prototype.toExponential()",
+            "dense:rubert-tiny2": "Числа и даты"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": 9,
-            "dense:word2vec-200": 3
+            "dense:word2vec-200": 3,
+            "dense:rubert-tiny2": null
+          }
+        },
+        {
+          "query_id": "dev-018",
+          "query": "найти элемент на странице по селектору",
+          "relevant": [
+            "Web/API/Document/querySelector",
+            "Web/API/Element/querySelector"
+          ],
+          "top1": {
+            "bm25": "Селекторы CSS",
+            "tfidf": "Селекторы по ID",
+            "dense:lsa-300": "Селектор дочерних элементов",
+            "dense:word2vec-200": "Селекторы CSS",
+            "dense:rubert-tiny2": "Псевдоэлемент"
+          },
+          "ranks": {
+            "bm25": null,
+            "tfidf": null,
+            "dense:lsa-300": null,
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": 5
+          }
+        },
+        {
+          "query_id": "dev-022",
+          "query": "добавить класс элементу из кода",
+          "relevant": [
+            "Web/API/Element/classList"
+          ],
+          "top1": {
+            "bm25": "Начало работы с CSS",
+            "tfidf": "Селекторы по классу",
+            "dense:lsa-300": "Селекторы по классу",
+            "dense:word2vec-200": "constructor",
+            "dense:rubert-tiny2": "Блок (скриптинг)"
+          },
+          "ranks": {
+            "bm25": null,
+            "tfidf": null,
+            "dense:lsa-300": null,
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": 9
           }
         },
         {
@@ -333,13 +368,15 @@
             "bm25": "Cache.match()",
             "tfidf": "DELETE",
             "dense:lsa-300": "303 See Other",
-            "dense:word2vec-200": "Коды состояния ответа HTTP"
+            "dense:word2vec-200": "Коды состояния ответа HTTP",
+            "dense:rubert-tiny2": "Cache.match()"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": 9,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -353,13 +390,15 @@
             "bm25": "CDN",
             "tfidf": "CDN",
             "dense:lsa-300": "CDN",
-            "dense:word2vec-200": "Прокси сервер"
+            "dense:word2vec-200": "Прокси сервер",
+            "dense:rubert-tiny2": "403 Forbidden"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": 5,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": 1
           }
         },
         {
@@ -372,13 +411,15 @@
             "bm25": "XMLHttpRequest.response",
             "tfidf": "HEAD",
             "dense:lsa-300": "422 Unprocessable Entity",
-            "dense:word2vec-200": "Content-Disposition"
+            "dense:word2vec-200": "Content-Disposition",
+            "dense:rubert-tiny2": "a"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": 8
+            "dense:word2vec-200": 8,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -392,13 +433,15 @@
             "bm25": "Отправка данных формы",
             "tfidf": "PUT",
             "dense:lsa-300": "Отправка данных формы",
-            "dense:word2vec-200": "Отправка данных формы"
+            "dense:word2vec-200": "Отправка данных формы",
+            "dense:rubert-tiny2": "Server-sent events"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": 10,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -412,13 +455,15 @@
             "bm25": "Выравнивание блоков в CSS разметке Grid",
             "tfidf": "Grid Column",
             "dense:lsa-300": "CSS Grid Layout",
-            "dense:word2vec-200": "Grid Column"
+            "dense:word2vec-200": "Grid Column",
+            "dense:rubert-tiny2": "align-items"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": 6,
-            "dense:word2vec-200": 6
+            "dense:word2vec-200": 6,
+            "dense:rubert-tiny2": null
           }
         }
       ]
@@ -445,6 +490,11 @@
           "нашёл на первом месте": 4,
           "нашёл в top-10": 24,
           "не нашёл": 12
+        },
+        "dense:rubert-tiny2": {
+          "нашёл на первом месте": 4,
+          "нашёл в top-10": 14,
+          "не нашёл": 22
         }
       },
       "failed_everywhere": [
@@ -459,13 +509,15 @@
             "bm25": "<li>",
             "tfidf": "<acronym>",
             "dense:lsa-300": "style",
-            "dense:word2vec-200": "style"
+            "dense:word2vec-200": "style",
+            "dense:rubert-tiny2": "Псевдоэлемент"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -478,52 +530,15 @@
             "bm25": "Псевдоклассы",
             "tfidf": "Псевдоклассы",
             "dense:lsa-300": "Псевдоклассы",
-            "dense:word2vec-200": "backface-visibility"
+            "dense:word2vec-200": "backface-visibility",
+            "dense:rubert-tiny2": "<filter-function>"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
-          }
-        },
-        {
-          "query_id": "test-026",
-          "query": "выровнять текст по центру",
-          "relevant": [
-            "Web/CSS/Reference/Properties/text-align"
-          ],
-          "top1": {
-            "bm25": "<col>: элемент столбца таблицы",
-            "tfidf": "<col>: элемент столбца таблицы",
-            "dense:lsa-300": "Гипертекст",
-            "dense:word2vec-200": "CanvasRenderingContext2D.textAlign"
-          },
-          "ranks": {
-            "bm25": null,
-            "tfidf": null,
-            "dense:lsa-300": null,
-            "dense:word2vec-200": null
-          }
-        },
-        {
-          "query_id": "test-028",
-          "query": "чтобы сайт работал без интернета",
-          "relevant": [
-            "Web/API/Service_Worker_API/Using_Service_Workers",
-            "Web/API/Service_Worker_API"
-          ],
-          "top1": {
-            "bm25": "Распространённые вопросы",
-            "tfidf": "Интернет-провайдер",
-            "dense:lsa-300": "Распространённые вопросы",
-            "dense:word2vec-200": "Интернет-провайдер"
-          },
-          "ranks": {
-            "bm25": null,
-            "tfidf": null,
-            "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -537,13 +552,15 @@
             "bm25": "Прокси сервер",
             "tfidf": "Браузер",
             "dense:lsa-300": ":read-only",
-            "dense:word2vec-200": "Стилизация ссылок"
+            "dense:word2vec-200": "Стилизация ссылок",
+            "dense:rubert-tiny2": "Использование геолокации"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -556,13 +573,15 @@
             "bm25": "Отправка данных формы",
             "tfidf": "Использование Объектов FormData",
             "dense:lsa-300": "Отправка данных формы",
-            "dense:word2vec-200": "Как настроить локальный сервер для тестирования?"
+            "dense:word2vec-200": "Как настроить локальный сервер для тестирования?",
+            "dense:rubert-tiny2": "File.name"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         }
       ],
@@ -577,13 +596,15 @@
             "bm25": "Переполнение содержимого",
             "tfidf": "overflow-block",
             "dense:lsa-300": "overflow",
-            "dense:word2vec-200": "overscroll-behavior"
+            "dense:word2vec-200": "overscroll-behavior",
+            "dense:rubert-tiny2": "Выравнивание блоков в разметке Flexbox"
           },
           "ranks": {
             "bm25": 2,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -596,13 +617,15 @@
             "bm25": "Методы HTTP запроса",
             "tfidf": "Range",
             "dense:lsa-300": "CONNECT",
-            "dense:word2vec-200": "CONNECT"
+            "dense:word2vec-200": "CONNECT",
+            "dense:rubert-tiny2": "CORS"
           },
           "ranks": {
             "bm25": null,
             "tfidf": 6,
             "dense:lsa-300": null,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         }
       ],
@@ -617,13 +640,15 @@
             "bm25": "Полезные методы для строк",
             "tfidf": "String.prototype.padStart()",
             "dense:lsa-300": "String.prototype.padStart()",
-            "dense:word2vec-200": "String.prototype.padStart()"
+            "dense:word2vec-200": "String.prototype.padStart()",
+            "dense:rubert-tiny2": "CanvasRenderingContext2D.lineCap"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": 9,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -637,13 +662,15 @@
             "bm25": "NodeList",
             "tfidf": "NodeList",
             "dense:lsa-300": "Array.prototype.reverse()",
-            "dense:word2vec-200": "Array.prototype.concat()"
+            "dense:word2vec-200": "Array.prototype.concat()",
+            "dense:rubert-tiny2": "Array.prototype.join()"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": 2
+            "dense:word2vec-200": 2,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -657,13 +684,15 @@
             "bm25": "Math.clz32()",
             "tfidf": "String.prototype.toUpperCase()",
             "dense:lsa-300": "Math.clz32()",
-            "dense:word2vec-200": "parseInt()"
+            "dense:word2vec-200": "parseInt()",
+            "dense:rubert-tiny2": "Шаблонные строки"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": null,
-            "dense:word2vec-200": 1
+            "dense:word2vec-200": 1,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -676,13 +705,15 @@
             "bm25": "Переполнение содержимого",
             "tfidf": "Блок (скриптинг)",
             "dense:lsa-300": "Блок (скриптинг)",
-            "dense:word2vec-200": "Блок (скриптинг)"
+            "dense:word2vec-200": "Блок (скриптинг)",
+            "dense:rubert-tiny2": "Array.prototype.splice()"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": 8,
-            "dense:word2vec-200": null
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": null
           }
         },
         {
@@ -695,13 +726,58 @@
             "bm25": "Что такое веб-сервер",
             "tfidf": "Gamepad.connected",
             "dense:lsa-300": "font-style",
-            "dense:word2vec-200": "Веб-шрифты"
+            "dense:word2vec-200": "Веб-шрифты",
+            "dense:rubert-tiny2": "Встраиваемый скрипт"
           },
           "ranks": {
             "bm25": null,
             "tfidf": null,
             "dense:lsa-300": 9,
-            "dense:word2vec-200": 2
+            "dense:word2vec-200": 2,
+            "dense:rubert-tiny2": 6
+          }
+        },
+        {
+          "query_id": "test-026",
+          "query": "выровнять текст по центру",
+          "relevant": [
+            "Web/CSS/Reference/Properties/text-align"
+          ],
+          "top1": {
+            "bm25": "<col>: элемент столбца таблицы",
+            "tfidf": "<col>: элемент столбца таблицы",
+            "dense:lsa-300": "Гипертекст",
+            "dense:word2vec-200": "CanvasRenderingContext2D.textAlign",
+            "dense:rubert-tiny2": "text-anchor"
+          },
+          "ranks": {
+            "bm25": null,
+            "tfidf": null,
+            "dense:lsa-300": null,
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": 2
+          }
+        },
+        {
+          "query_id": "test-028",
+          "query": "чтобы сайт работал без интернета",
+          "relevant": [
+            "Web/API/Service_Worker_API/Using_Service_Workers",
+            "Web/API/Service_Worker_API"
+          ],
+          "top1": {
+            "bm25": "Распространённые вопросы",
+            "tfidf": "Интернет-провайдер",
+            "dense:lsa-300": "Распространённые вопросы",
+            "dense:word2vec-200": "Интернет-провайдер",
+            "dense:rubert-tiny2": "Service Worker API"
+          },
+          "ranks": {
+            "bm25": null,
+            "tfidf": null,
+            "dense:lsa-300": null,
+            "dense:word2vec-200": null,
+            "dense:rubert-tiny2": 1
           }
         }
       ]

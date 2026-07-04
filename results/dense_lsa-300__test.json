@@ -1,0 +1,29 @@
+{
+  "retriever": "dense-exact:lsa-300",
+  "label": "dense:lsa-300",
+  "corpus": "data/corpus/mdn-ru.jsonl",
+  "corpus_documents": 2570,
+  "corpus_fingerprint": "0f5e613ef25d14835578eb8bb317a8dfbceb1f69eb59ea9c7adc5204031343fe",
+  "queries_file": "data/queries/test.jsonl",
+  "queries": 36,
+  "index_dir": null,
+  "k_values": [
+    1,
+    5,
+    10
+  ],
+  "metrics": {
+    "recall@1": 0.0972,
+    "mrr@1": 0.1111,
+    "ndcg@1": 0.1111,
+    "recall@5": 0.375,
+    "mrr@5": 0.2319,
+    "ndcg@5": 0.254,
+    "recall@10": 0.5694,
+    "mrr@10": 0.2549,
+    "ndcg@10": 0.3218
+  },
+  "prepare_seconds": 9.89,
+  "evaluate_seconds": 0.03,
+  "evaluated_at": "2026-10-06T15:01:54Z"
+}

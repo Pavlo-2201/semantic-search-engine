@@ -7,7 +7,7 @@
     5,
     10
   ],
-  "compared_at": "2026-10-06T14:38:22Z",
+  "compared_at": "2026-10-06T15:12:45Z",
   "results": {
     "data/queries/dev.jsonl": [
       {
@@ -28,7 +28,7 @@
           "mrr@10": 0.2106,
           "ndcg@10": 0.2379
         },
-        "prepare_seconds": 9.75,
+        "prepare_seconds": 10.15,
         "compare_with": null
       },
       {
@@ -49,7 +49,7 @@
           "mrr@10": 0.2007,
           "ndcg@10": 0.2039
         },
-        "prepare_seconds": 10.29,
+        "prepare_seconds": 9.15,
         "compare_with": null
       },
       {
@@ -71,7 +71,7 @@
           "mrr@10": 0.219,
           "ndcg@10": 0.2872
         },
-        "prepare_seconds": 11.3,
+        "prepare_seconds": 10.21,
         "compare_with": null
       },
       {
@@ -93,7 +93,7 @@
           "mrr@10": 0.2095,
           "ndcg@10": 0.2393
         },
-        "prepare_seconds": 42.13,
+        "prepare_seconds": 41.57,
         "compare_with": null
       },
       {
@@ -117,7 +117,7 @@
           "mrr@10": 0.219,
           "ndcg@10": 0.2872
         },
-        "prepare_seconds": 0.54,
+        "prepare_seconds": 0.59,
         "compare_with": "lsa-300",
         "loss_vs_exact": {
           "recall@1": 0.0,
@@ -154,7 +154,7 @@
           "mrr@10": 0.2098,
           "ndcg@10": 0.2525
         },
-        "prepare_seconds": 0.02,
+        "prepare_seconds": 0.03,
         "compare_with": "lsa-300",
         "loss_vs_exact": {
           "recall@1": -0.0278,
@@ -167,6 +167,28 @@
           "mrr@10": -0.0092,
           "ndcg@10": -0.0347
         }
+      },
+      {
+        "name": "rubert-tiny2",
+        "retriever": "dense-exact:rubert-tiny2",
+        "config": {
+          "retriever": "dense",
+          "model": "rubert-tiny2"
+        },
+        "queries": 36,
+        "metrics": {
+          "recall@1": 0.0694,
+          "mrr@1": 0.0833,
+          "ndcg@1": 0.0833,
+          "recall@5": 0.162,
+          "mrr@5": 0.1491,
+          "ndcg@5": 0.14,
+          "recall@10": 0.2269,
+          "mrr@10": 0.1556,
+          "ndcg@10": 0.1639
+        },
+        "prepare_seconds": 36.68,
+        "compare_with": null
       },
       {
         "name": "e5-small",
@@ -198,7 +220,7 @@
           "mrr@10": 0.2677,
           "ndcg@10": 0.3149
         },
-        "prepare_seconds": 9.75,
+        "prepare_seconds": 10.15,
         "compare_with": null
       },
       {
@@ -219,7 +241,7 @@
           "mrr@10": 0.2089,
           "ndcg@10": 0.2577
         },
-        "prepare_seconds": 10.29,
+        "prepare_seconds": 9.15,
         "compare_with": null
       },
       {
@@ -241,7 +263,7 @@
           "mrr@10": 0.2549,
           "ndcg@10": 0.3218
         },
-        "prepare_seconds": 11.3,
+        "prepare_seconds": 10.21,
         "compare_with": null
       },
       {
@@ -263,7 +285,7 @@
           "mrr@10": 0.2649,
           "ndcg@10": 0.3068
         },
-        "prepare_seconds": 42.13,
+        "prepare_seconds": 41.57,
         "compare_with": null
       },
       {
@@ -287,7 +309,7 @@
           "mrr@10": 0.2549,
           "ndcg@10": 0.3218
         },
-        "prepare_seconds": 0.54,
+        "prepare_seconds": 0.59,
         "compare_with": "lsa-300",
         "loss_vs_exact": {
           "recall@1": 0.0,
@@ -324,7 +346,7 @@
           "mrr@10": 0.2467,
           "ndcg@10": 0.314
         },
-        "prepare_seconds": 0.02,
+        "prepare_seconds": 0.03,
         "compare_with": "lsa-300",
         "loss_vs_exact": {
           "recall@1": 0.0,
@@ -337,6 +359,28 @@
           "mrr@10": -0.0082,
           "ndcg@10": -0.0078
         }
+      },
+      {
+        "name": "rubert-tiny2",
+        "retriever": "dense-exact:rubert-tiny2",
+        "config": {
+          "retriever": "dense",
+          "model": "rubert-tiny2"
+        },
+        "queries": 36,
+        "metrics": {
+          "recall@1": 0.0833,
+          "mrr@1": 0.1111,
+          "ndcg@1": 0.0926,
+          "recall@5": 0.2222,
+          "mrr@5": 0.1815,
+          "ndcg@5": 0.1627,
+          "recall@10": 0.2917,
+          "mrr@10": 0.1954,
+          "ndcg@10": 0.1906
+        },
+        "prepare_seconds": 36.68,
+        "compare_with": null
       },
       {
         "name": "e5-small",

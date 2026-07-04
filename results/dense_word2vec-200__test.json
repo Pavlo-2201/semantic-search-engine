@@ -1,0 +1,29 @@
+{
+  "retriever": "dense-exact:word2vec-200",
+  "label": "dense:word2vec-200",
+  "corpus": "data/corpus/mdn-ru.jsonl",
+  "corpus_documents": 2570,
+  "corpus_fingerprint": "0f5e613ef25d14835578eb8bb317a8dfbceb1f69eb59ea9c7adc5204031343fe",
+  "queries_file": "data/queries/test.jsonl",
+  "queries": 36,
+  "index_dir": null,
+  "k_values": [
+    1,
+    5,
+    10
+  ],
+  "metrics": {
+    "recall@1": 0.0694,
+    "mrr@1": 0.1111,
+    "ndcg@1": 0.1111,
+    "recall@5": 0.4028,
+    "mrr@5": 0.2449,
+    "ndcg@5": 0.2688,
+    "recall@10": 0.5278,
+    "mrr@10": 0.2649,
+    "ndcg@10": 0.3068
+  },
+  "prepare_seconds": 42.87,
+  "evaluate_seconds": 0.03,
+  "evaluated_at": "2026-10-06T15:02:38Z"
+}
