@@ -233,16 +233,17 @@ def test_sentence_transformer_kwargs_falls_back_to_hub_with_revision(tmp_path):
     }
 
 
-def test_model_config_of_rubert_matches_its_own_pooling_config():
+@pytest.mark.parametrize("model_name", ["rubert-tiny2", "e5-small"])
+def test_model_config_matches_its_own_pooling_config(model_name):
     """Пулинг в конфигурации должен совпадать с 1_Pooling/config.json модели."""
     import json
 
     configs = load_model_configs(Path(__file__).resolve().parents[1] / "configs/models.yaml")
-    config = configs["rubert-tiny2"]
+    config = configs[model_name]
     assert config.revision, "ревизия модели должна быть зафиксирована"
     pooling_config = Path(config.local_path or "") / "1_Pooling/config.json"
     if not pooling_config.exists():
-        pytest.skip("веса rubert-tiny2 не скачаны")
+        pytest.skip(f"веса {model_name} не скачаны")
     declared = json.loads(pooling_config.read_text(encoding="utf-8"))
     expected = "cls" if declared.get("pooling_mode_cls_token") else "mean"
     assert config.pooling == expected

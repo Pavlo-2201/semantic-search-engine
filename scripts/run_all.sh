@@ -38,8 +38,10 @@ for queries in data/queries/dev.jsonl data/queries/test.jsonl; do
       --queries "$queries" --output results
   done
   models="lsa-300 word2vec-200"
-  # предобученная модель — только если её веса уже скачаны (см. configs/models.yaml)
-  if [ -d models/rubert-tiny2 ]; then models="$models rubert-tiny2"; fi
+  # предобученные модели — только если их веса уже скачаны (см. configs/models.yaml)
+  for pretrained in rubert-tiny2 e5-small; do
+    if [ -d "models/$pretrained" ]; then models="$models $pretrained"; fi
+  done
   for model in $models; do
     python scripts/evaluate.py --quiet --corpus "$CORPUS" --retriever dense --model "$model" \
       --queries "$queries" --output results

@@ -1,0 +1,29 @@
+{
+  "retriever": "dense-exact:e5-small",
+  "label": "dense:e5-small",
+  "corpus": "data/corpus/mdn-ru.jsonl",
+  "corpus_documents": 2570,
+  "corpus_fingerprint": "0f5e613ef25d14835578eb8bb317a8dfbceb1f69eb59ea9c7adc5204031343fe",
+  "queries_file": "data/queries/dev.jsonl",
+  "queries": 36,
+  "index_dir": null,
+  "k_values": [
+    1,
+    5,
+    10
+  ],
+  "metrics": {
+    "recall@1": 0.287,
+    "mrr@1": 0.3333,
+    "ndcg@1": 0.3333,
+    "recall@5": 0.5509,
+    "mrr@5": 0.4338,
+    "ndcg@5": 0.455,
+    "recall@10": 0.6435,
+    "mrr@10": 0.448,
+    "ndcg@10": 0.4849
+  },
+  "prepare_seconds": 164.49,
+  "evaluate_seconds": 0.14,
+  "evaluated_at": "2026-10-06T15:38:53Z"
+}

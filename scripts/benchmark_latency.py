@@ -37,6 +37,7 @@ DEFAULT_RUNS = (
     "lsa-300",
     "word2vec-200",
     "rubert-tiny2",
+    "e5-small",
     "lsa-300-hnsw",
     "lsa-300-ivf",
 )
@@ -45,6 +46,7 @@ DENSE_RUNS = {
     "lsa-300": {"model": "lsa-300", "index": None},
     "word2vec-200": {"model": "word2vec-200", "index": None},
     "rubert-tiny2": {"model": "rubert-tiny2", "index": None},
+    "e5-small": {"model": "e5-small", "index": None},
     "lsa-300-flat": {"model": "lsa-300", "index": IndexSpec(index_type="flat-ip")},
     "lsa-300-hnsw": {"model": "lsa-300", "index": IndexSpec(index_type="hnsw")},
     "lsa-300-ivf": {"model": "lsa-300", "index": IndexSpec(index_type="ivf-flat", nlist=64)},

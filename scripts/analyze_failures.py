@@ -24,9 +24,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from semsearch.corpus import load_corpus  # noqa: E402
 from semsearch.evaluation import evaluate_queries, load_queries  # noqa: E402
-from semsearch.pipeline import build_retriever  # noqa: E402
+from semsearch.embedding import local_weights_path  # noqa: E402
+from semsearch.pipeline import build_retriever, resolve_model_config  # noqa: E402
 
-DEFAULT_RUNS = "bm25,tfidf,dense:lsa-300,dense:word2vec-200,dense:rubert-tiny2"
+DEFAULT_RUNS = "bm25,tfidf,dense:lsa-300,dense:word2vec-200,dense:rubert-tiny2,dense:e5-small"
 LEXICAL = ("bm25", "tfidf")
 
 
@@ -61,6 +62,14 @@ def main() -> int:
 
     retrievers = {}
     for label, kind, model in runs:
+        if model is not None:
+            config = resolve_model_config(model)
+            # как и в сравнении: модель без скачанных весов пропускается, а не
+            # загружается с huggingface.co
+            if config.local_path and local_weights_path(config) is None:
+                if not args.quiet:
+                    print(f"{label}: пропущено, нет скачанных весов в {config.local_path}")
+                continue
         retrievers[label] = build_retriever(
             kind, documents, model=model, progress=not args.quiet
         )

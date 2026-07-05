@@ -20,137 +20,158 @@
     "faiss_threads": 4,
     "numpy": "2.5.3"
   },
-  "measured_at": "2026-10-06T15:13:14Z",
+  "measured_at": "2026-10-06T15:46:30Z",
   "runs": {
     "bm25": {
       "search": {
         "measurements": 200,
-        "mean_ms": 1.079,
-        "p50_ms": 1.061,
-        "p95_ms": 1.555,
-        "min_ms": 0.42,
-        "max_ms": 1.751
+        "mean_ms": 1.146,
+        "p50_ms": 1.13,
+        "p95_ms": 1.692,
+        "min_ms": 0.449,
+        "max_ms": 2.206
       },
-      "total_p50_ms": 1.061,
-      "total_p95_ms": 1.555,
+      "total_p50_ms": 1.13,
+      "total_p95_ms": 1.692,
       "note": "лексический поиск измерен целиком: разбор запроса на термины неотделим от обхода словаря"
     },
     "tfidf": {
       "search": {
         "measurements": 200,
-        "mean_ms": 1.641,
-        "p50_ms": 1.585,
-        "p95_ms": 1.978,
-        "min_ms": 1.346,
-        "max_ms": 2.432
+        "mean_ms": 2.002,
+        "p50_ms": 1.823,
+        "p95_ms": 2.75,
+        "min_ms": 1.355,
+        "max_ms": 17.034
       },
-      "total_p50_ms": 1.585,
-      "total_p95_ms": 1.978,
+      "total_p50_ms": 1.823,
+      "total_p95_ms": 2.75,
       "note": "лексический поиск измерен целиком: разбор запроса на термины неотделим от обхода словаря"
     },
     "lsa-300": {
       "query_encoding": {
         "measurements": 200,
-        "mean_ms": 6.428,
-        "p50_ms": 6.312,
-        "p95_ms": 7.4,
-        "min_ms": 5.822,
-        "max_ms": 7.884
+        "mean_ms": 9.875,
+        "p50_ms": 10.019,
+        "p95_ms": 12.795,
+        "min_ms": 6.513,
+        "max_ms": 17.165
       },
       "index_search": {
         "measurements": 200,
-        "mean_ms": 0.41,
-        "p50_ms": 0.347,
-        "p95_ms": 1.188,
-        "min_ms": 0.132,
-        "max_ms": 1.386
+        "mean_ms": 0.499,
+        "p50_ms": 0.414,
+        "p95_ms": 1.45,
+        "min_ms": 0.145,
+        "max_ms": 1.693
       },
-      "total_p50_ms": 6.659,
-      "total_p95_ms": 8.588,
+      "total_p50_ms": 10.433,
+      "total_p95_ms": 14.245,
       "retriever": "dense-exact:lsa-300"
     },
     "word2vec-200": {
       "query_encoding": {
         "measurements": 200,
-        "mean_ms": 0.097,
-        "p50_ms": 0.093,
+        "mean_ms": 0.084,
+        "p50_ms": 0.077,
         "p95_ms": 0.134,
-        "min_ms": 0.054,
-        "max_ms": 0.233
+        "min_ms": 0.043,
+        "max_ms": 0.212
       },
       "index_search": {
         "measurements": 200,
-        "mean_ms": 0.536,
-        "p50_ms": 0.528,
-        "p95_ms": 1.021,
-        "min_ms": 0.201,
-        "max_ms": 1.303
+        "mean_ms": 0.451,
+        "p50_ms": 0.435,
+        "p95_ms": 0.834,
+        "min_ms": 0.164,
+        "max_ms": 1.043
       },
-      "total_p50_ms": 0.621,
-      "total_p95_ms": 1.155,
+      "total_p50_ms": 0.512,
+      "total_p95_ms": 0.968,
       "retriever": "dense-exact:word2vec-200"
     },
     "rubert-tiny2": {
       "query_encoding": {
         "measurements": 200,
-        "mean_ms": 3.955,
-        "p50_ms": 3.874,
-        "p95_ms": 4.561,
-        "min_ms": 3.2,
-        "max_ms": 10.837
+        "mean_ms": 3.66,
+        "p50_ms": 3.552,
+        "p95_ms": 4.404,
+        "min_ms": 3.103,
+        "max_ms": 5.003
       },
       "index_search": {
         "measurements": 200,
-        "mean_ms": 0.395,
-        "p50_ms": 0.364,
-        "p95_ms": 0.651,
-        "min_ms": 0.135,
-        "max_ms": 1.56
+        "mean_ms": 0.447,
+        "p50_ms": 0.432,
+        "p95_ms": 0.721,
+        "min_ms": 0.199,
+        "max_ms": 0.757
       },
-      "total_p50_ms": 4.238,
-      "total_p95_ms": 5.212,
+      "total_p50_ms": 3.984,
+      "total_p95_ms": 5.125,
       "retriever": "dense-exact:rubert-tiny2"
+    },
+    "e5-small": {
+      "query_encoding": {
+        "measurements": 200,
+        "mean_ms": 13.564,
+        "p50_ms": 13.425,
+        "p95_ms": 15.124,
+        "min_ms": 11.504,
+        "max_ms": 27.212
+      },
+      "index_search": {
+        "measurements": 200,
+        "mean_ms": 0.642,
+        "p50_ms": 0.562,
+        "p95_ms": 1.298,
+        "min_ms": 0.148,
+        "max_ms": 1.837
+      },
+      "total_p50_ms": 13.987,
+      "total_p95_ms": 16.422,
+      "retriever": "dense-exact:e5-small"
     },
     "lsa-300-hnsw": {
       "query_encoding": {
         "measurements": 200,
-        "mean_ms": 10.396,
-        "p50_ms": 10.038,
-        "p95_ms": 13.492,
-        "min_ms": 7.282,
-        "max_ms": 14.798
+        "mean_ms": 4.86,
+        "p50_ms": 4.824,
+        "p95_ms": 5.438,
+        "min_ms": 3.99,
+        "max_ms": 5.855
       },
       "index_search": {
         "measurements": 200,
-        "mean_ms": 0.106,
-        "p50_ms": 0.096,
-        "p95_ms": 0.16,
-        "min_ms": 0.066,
-        "max_ms": 0.231
+        "mean_ms": 0.11,
+        "p50_ms": 0.099,
+        "p95_ms": 0.168,
+        "min_ms": 0.068,
+        "max_ms": 0.251
       },
-      "total_p50_ms": 10.134,
-      "total_p95_ms": 13.652,
+      "total_p50_ms": 4.923,
+      "total_p95_ms": 5.606,
       "retriever": "faiss-hnsw:lsa-300"
     },
     "lsa-300-ivf": {
       "query_encoding": {
         "measurements": 200,
-        "mean_ms": 10.943,
-        "p50_ms": 10.777,
-        "p95_ms": 12.943,
-        "min_ms": 9.064,
-        "max_ms": 13.301
+        "mean_ms": 4.94,
+        "p50_ms": 4.701,
+        "p95_ms": 6.577,
+        "min_ms": 4.442,
+        "max_ms": 8.188
       },
       "index_search": {
         "measurements": 200,
-        "mean_ms": 0.025,
-        "p50_ms": 0.022,
-        "p95_ms": 0.043,
-        "min_ms": 0.015,
-        "max_ms": 0.083
+        "mean_ms": 0.031,
+        "p50_ms": 0.027,
+        "p95_ms": 0.051,
+        "min_ms": 0.021,
+        "max_ms": 0.11
       },
-      "total_p50_ms": 10.799,
-      "total_p95_ms": 12.986,
+      "total_p50_ms": 4.728,
+      "total_p95_ms": 6.628,
       "retriever": "faiss-ivf-flat:lsa-300"
     }
   }
