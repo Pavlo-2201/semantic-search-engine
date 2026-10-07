@@ -8,7 +8,9 @@ description: >
 source:
   kind: github-raw
   repo: mdn/translated-content
-  ref: main            # можно указать конкретный commit sha, тогда загрузка строго воспроизводима
+  # commit ветки main, на котором получены числа в README: у загрузки с main
+  # (data/corpus/mdn-ru.meta.json) и с этого commit'а одинаковый отпечаток корпуса
+  ref: f39fd206b38a94264315eb2bcacb705bd8b5d326
   # файл со списком страниц русского перевода: ключи объекта — slug страницы
   listing_path: files/ru/_wikihistory.json
   # каталог, в котором лежат сами статьи: files/ru/<slug в нижнем регистре>/index.md
